@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personaliza tu Gear | B.O.B Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Agrega esto al inicio de tu sección <style> */
+body {
+    background-color: #000000; /* Fondo negro absoluto */
+    color: white;              /* Texto blanco por defecto */
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* También asegúrate de que estas variables existan si las usas */
+:root {
+    --primary: #ff4500; /* El naranja de B.O.B Custom */
+    --gray: #1a1a1a;    /* Gris oscuro para los cuadros */
+}
+
+/* Estilo para el Header / Navegación */
+header {
+    background: rgba(0, 0, 0, 0.95);
+    padding: 15px 5%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0; /* Usa right: 0 en lugar de width para que encaje perfecto */
+    z-index: 1000;
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box; /* Crucial para que el padding no sume al ancho */
+}
+
+.logo {
+    font-family: 'Metal Mania', cursive;
+    font-size: 1.8rem;
+    color: white;
+    letter-spacing: 2px;
+}
+
+.logo span { color: var(--primary); }
+
+.back-link {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.back-link:hover { color: var(--primary); }
+
+/* Mejora del Botón Añadir al Carrito */
+#add-to-cart-btn {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    border: none;
+    color: white;
+    font-family: 'Metal Mania';
+    font-size: 1.2rem;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-transform: uppercase;
+}
+
+#add-to-cart-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px var(--primary);
+}
+        .custom-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 120px 5% 50px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .preview-box {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--primary);
+            text-align: center;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+        .preview-box img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        .form-box {
+            background: var(--gray);
+            padding: 30px;
+            border-radius: 15px;
+        }
+        .input-group { margin-bottom: 20px; }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .input-group select, .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: #121212;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+            outline: none;
+        }
+        .input-group select:focus { border-color: var(--primary); }
+        .price-tag {
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 20px 0;
+            font-family: 'Metal Mania';
+        }
+        @media (max-width: 768px) {
+    .custom-container {
+        grid-template-columns: 1fr;
+        padding: 100px 20px 20px; /* Más espacio arriba y menos a los lados */
+    }
+    .preview-box {
+        position: relative; /* En móvil es mejor que no sea sticky */
+        top: 0;
+        margin-bottom: 20px;
+    }
+}
+
+        /* Asegura que los enlaces dentro del modal parezcan botones */
+.modal-buttons .btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-family: 'Metal Mania', cursive;
+    text-decoration: none; /* Quita el subrayado */
+    text-align: center;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Botón de seguir comprando (Blanco/Claro) */
+.btn-secondary {
+    background: #eeeeee;
+    color: #1a1a1a !important; /* Importante para sobreescribir el morado */
+}
+
+.btn-secondary:hover {
+    background: #ffffff;
+    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+/* Botón de ver más (Gris Oscuro) */
+.btn-dark {
+    background: #333333;
+    color: #ffffff !important;
+}
+
+.btn-dark:hover {
+    background: #444444;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+        /* Estilos para el Modal */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 5000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--gray);
+    border: 2px solid var(--primary);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 0 20px var(--primary);
+}
+
+.modal-content h2 {
+    font-family: 'Metal Mania';
+    color: var(--primary);
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+/* Contenedor de capas para la previsualización */
+.preview-box {
+    position: sticky;
+    top: 100px;
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid var(--primary);
+    text-align: center;
+    height: fit-content;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    overflow: hidden; /* Esto recorta el logo si intentas sacarlo de la prenda */
+    border-radius: 10px;
+    background: #121212; /* Fondo para que se note el límite */
+}
+
+#product-img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+}
+
+
+/* El logo sobrepuesto - Movible, escalable y rotable */
+#logo-overlay {
+    position: absolute;
+    max-width: 90%; /* Evita que el logo sea gigante al cargar */
+    cursor: move;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centrado inicial */
+}
+
+/* Estilo para los nuevos controles */
+.control-group {
+    background: #121212;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px ridge #333;
+}
+.control-group label {
+    font-size: 0.8rem !important;
+    color: #888 !important;
+    margin-bottom: 5px;
+}
+input[type="range"] {
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+    </style>
+</head>
+<body>
+    <header>
+    <div class="logo">B.O.B<span> CUSTOM</span></div>
+    <a href="index.html" class="back-link">← VOLVER A TIENDA</a>
+</header>
+
+    <div class="custom-container">
+        <div class="preview-box">
+    <h2 id="product-name">Cargando...</h2>
+    <div class="image-container">
+        <img id="product-img" src="" alt="Vista previa">
+        <img id="logo-overlay" src="" alt="Logo sobrepuesto">
+    </div>
+    <div class="price-tag" id="product-price">$0 MXN</div>
+</div>
+
+        <div class="form-box">
+            <div class="input-group">
+                <label>Talla / Medida</label>
+                <select id="size">
+                    <option value="S">Chica (S)</option>
+                    <option value="M">Mediana (M)</option>
+                    <option value="L">Grande (L)</option>
+                    <option value="XL">Extra Grande (XL)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Color de la prenda/artículo</label>
+                <select id="color">
+                    <option value="Negro">Negro Mate</option>
+                    <option value="Blanco">Blanco</option>
+                    <option value="Gris">Gris Oxford</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Ubicación del Logo</label>
+                <select id="position">
+                    <option value="Frente Centro">Frente Centro</option>
+                    <option value="Pecho Izquierdo">Pecho Izquierdo</option>
+                    <option value="Espalda">Espalda Grande</option>
+                    <option value="Manga">Manga</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+    <label>Sube tu imagen o logo</label>
+    <input type="file" id="logo-file" accept="image/*">
+
+    <div id="edit-controls" style="display: none;" class="control-group">
+        <div style="margin-bottom: 10px;">
+            <label>Tamaño del Logo</label>
+            <input type="range" id="scale-range" min="30" max="300" value="100" style="width:100%">
+        </div>
+        <div>
+            <label>Rotación</label>
+            <input type="range" id="rotate-range" min="0" max="360" value="0" style="width:100%">
+        </div>
+        <button onclick="resetLogo()" style="background:none; border:none; color:var(--primary); font-size:0.7rem; cursor:pointer; margin-top:5px;">RESETEAR LOGO</button>
+    </div>
+</div>
+
+            <div class="input-group">
+                <label>Instrucciones adicionales</label>
+                <textarea id="notes" rows="3" placeholder="Ej: Quiero mi nombre arriba del logo..."></textarea>
+            </div>
+
+            <button class="btn" id="add-to-cart-btn" style="width: 100%;" onclick="addToCart()">
+                🛒 AÑADIR AL CARRITO
+            </button>
+        </div>
+    </div>
+
+    <div id="cart-floating" class="cart-floating" style="display:none; position: fixed; bottom: 20px; right: 20px; width: 300px; background: var(--gray); border: 2px solid var(--primary); border-radius: 10px; padding: 15px; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <h3 style="font-family: 'Metal Mania'; color: var(--primary); margin-top: 0;">🛒 Tu Carrito</h3>
+        <div id="cart-items" style="max-height: 200px; overflow-y: auto; font-size: 0.8rem; margin-bottom: 15px;"></div>
+        <div style="border-top: 1px solid #444; padding-top: 10px; font-weight: bold;">
+            Total: $<span id="cart-total">0</span> MXN
+        </div>
+        <button class="btn" onclick="checkoutWhatsApp()" style="width: 100%; margin-top: 10px; font-size: 0.8rem;">Enviar Pedido Completo</button>
+        <button onclick="toggleCart()" style="background: none; border: none; color: white; cursor: pointer; display: block; width: 100%; margin-top: 5px; font-size: 0.7rem;">Cerrar Vista</button>
+    </div>
+
+    <div onclick="toggleCart()" style="position: fixed; bottom: 20px; left: 20px; background: var(--primary); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2000; box-shadow: 0 0 10px var(--primary);">
+        🛒
+    </div>
+
+    <div id="custom-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2>📦 ¡ARSENAL ACTUALIZADO!</h2>
+        <p>Tu artículo ha sido añadido con éxito.</p>
+        <div class="modal-buttons">
+            <button class="btn btn-secondary" onclick="closeModal('custom-modal')">SEGUIR PERSONALIZANDO</button>
+            <a href="index.html" class="btn btn-dark">VER MÁS PRODUCTOS</a>
+        </div>
+    </div>
+</div>
+
+<div id="generic-alert-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 id="alert-title">⚠️ AVISO</h2>
+        <p id="alert-message">Mensaje de alerta.</p>
+        <button class="btn" onclick="closeModal('generic-alert-modal')" style="width: 100%;">ENTENDIDO</button>
+    </div>
+</div>
+
+<script>
+    const inventory = [
+    { id: 1, category: 'dtf', name: "Playera Algodón Hombre", price: 250, img: "img/ph.png" },
+    { id: 2, category: 'dtf', name: "Playera Algodón Mujer", price: 250, img: "img/pm.png" },
+    { id: 3, category: 'dtf', name: "Sudadera Unisex Capucha", price: 550, img: "img/sc.png" },
+    { id: 4, category: 'dtf', name: "Sudadera Cerrada", price: 480, img: "img/sc1.png" },
+    { id: 5, category: 'dtf', name: "Gorra de Malla", price: 180, img: "img/gm.png" },
+    { id: 6, category: 'dtf', name: "Playera Dri-fit", price: 280, img: "img/pd.png" },
+    { id: 7, category: 'laser', name: "Placas Militares", price: 150, img: "img/pm1.png" },
+    { id: 8, category: 'laser', name: "Licorera Metálica", price: 320, img: "img/lm.jpg" },
+    { id: 9, category: 'laser', name: "Navaja Táctica", price: 450, img: "img/nt.jpg" },
+    { id: 10, category: 'laser', name: "Porta Llaves", price: 200, img: "img/pll.png" },
+    { id: 11, category: 'laser', name: "Portacascos", price: 650, img: "img/pc.jpg" },
+    { id: 12, category: 'laser', name: "Libreta de Piel", price: 380, img: "img/l.png" }
+];
+
+    // Cargar carrito desde LocalStorage al iniciar
+    let cart = JSON.parse(localStorage.getItem('bob_cart')) || [];
+
+    const params = new URLSearchParams(window.location.search);
+    const productId = parseInt(params.get('id'));
+    const product = inventory.find(p => p.id === productId);
+
+    if(product) {
+        document.getElementById('product-name').innerText = product.name;
+        document.getElementById('product-img').src = product.img;
+        document.getElementById('product-price').innerText = `$${product.price} MXN`;
+    }
+
+    function addToCart() {
+    const item = {
+        name: product.name,
+        price: product.price,
+        size: document.getElementById('size').value,
+        color: document.getElementById('color').value,
+        position: document.getElementById('position').value,
+        notes: document.getElementById('notes').value,
+        logoName: document.getElementById('logo-file').files[0] ? document.getElementById('logo-file').files[0].name : "Sin logo"
+    };
+
+    cart.push(item);
+    localStorage.setItem('bob_cart', JSON.stringify(cart));
+    updateCartUI();
+
+    // REMOVEMOS: alert("Añadido...");
+    // USAMOS EL MODAL:
+    document.getElementById('custom-modal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('custom-modal').style.display = 'none';
+}
+
+// Opcional: Cerrar modal si hacen clic fuera del contenido
+window.onclick = function(event) {
+    const modal = document.getElementById('custom-modal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+
+    function updateCartUI() {
+        const container = document.getElementById('cart-items');
+        const totalEl = document.getElementById('cart-total');
+        container.innerHTML = '';
+        let total = 0;
+
+        cart.forEach((item, index) => {
+            total += item.price;
+            container.innerHTML += `
+                <div style="border-bottom: 1px solid #333; padding: 5px 0; display: flex; justify-content: space-between;">
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <small>${item.size} | ${item.color}</small>
+                    </div>
+                    <div>
+                        $${item.price}
+                        <span onclick="removeItem(${index})" style="color:red; cursor:pointer; margin-left:5px;">✕</span>
+                    </div>
+                </div>
+            `;
+        });
+        totalEl.innerText = total;
+    }
+
+    function removeItem(index) {
+        cart.splice(index, 1);
+        localStorage.setItem('bob_cart', JSON.stringify(cart));
+        updateCartUI();
+    }
+
+    function toggleCart() {
+        const el = document.getElementById('cart-floating');
+        el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+    }
+
+    // Función para abrir cualquier modal con mensaje personalizado (opcional)
+function showGenericAlert(titulo, mensaje) {
+    document.getElementById('alert-title').innerText = titulo;
+    document.getElementById('alert-message').innerText = mensaje;
+    document.getElementById('generic-alert-modal').style.display = 'flex';
+}
+
+// Función corregida para cerrar cualquier modal por ID
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+// Actualización de la función de WhatsApp
+function checkoutWhatsApp() {
+    if(cart.length === 0) {
+        // En lugar de alert("Tu carrito está vacío"), usamos el modal:
+        showGenericAlert("ARSENAL VACÍO", "Selecciona tu equipo antes de ir a la batalla.");
+        return;
+    }
+
+    const phone = "525546628442";
+    let message = "🏴‍☠️ *ORDEN DE PERSONALIZACIÓN B.O.B* 🏴‍☠️\n\n";
+
+    cart.forEach((item, i) => {
+        message += `*${i+1}. ${item.name}*\n`;
+        message += `   └ Talla: ${item.size} | Color: ${item.color}\n`;
+        message += `   └ Ubicación: ${item.position}\n`;
+        message += `   └ Logo: ${item.logoName}\n`;
+        if(item.notes) message += `   └ Notas: ${item.notes}\n`;
+        message += `   └ Precio: $${item.price}\n\n`;
+    });
+
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    message += `*TOTAL A PAGAR: $${total} MXN*`;
+
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
+}
+
+// Opcional: Cerrar cualquier modal al hacer clic fuera del contenido
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.style.display = 'none';
+    }
+}
+
+    // Cambiar la función del botón original de "Enviar a WhatsApp" por "Añadir al carrito"
+    document.querySelector('.form-box .btn').innerText = "🛒 AÑADIR AL CARRITO";
+    document.querySelector('.form-box .btn').onclick = addToCart;
+
+    // Inicializar UI si ya hay cosas
+    window.onload = updateCartUI;
+
+    // Lógica para previsualizar el logo dinámicamente
+document.getElementById('logo-file').addEventListener('change', function(e) {
+    const reader = new FileReader();
+    const logoOverlay = document.getElementById('logo-overlay');
+
+    reader.onload = function(event) {
+        logoOverlay.src = event.target.result;
+        logoOverlay.style.display = 'block';
+    }
+
+    if(e.target.files[0]) {
+        reader.readAsDataURL(e.target.files[0]);
+    }
+});
+
+// LÓGICA DE ARRASTRE (DRAG & DROP)
+// VARIABLES DE ESTADO DEL LOGO
+let currentScale = 100;
+let currentRotation = 0;
+let xOffset = 0;
+let yOffset = 0;
+
+const logo = document.getElementById('logo-overlay');
+const scaleRange = document.getElementById('scale-range');
+const rotateRange = document.getElementById('rotate-range');
+const editControls = document.getElementById('edit-controls');
+
+// 1. Mostrar controles cuando se suba una imagen
+document.getElementById('logo-file').addEventListener('change', function(e) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        logo.src = event.target.result;
+        logo.style.display = 'block';
+        editControls.style.display = 'block'; // Mostramos sliders
+        resetLogo(); // Limpiamos transformaciones previas
+    }
+    if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+});
+
+// 2. Lógica de Escala y Rotación
+scaleRange.addEventListener('input', (e) => {
+    currentScale = e.target.value;
+    updateLogoTransform();
+});
+
+rotateRange.addEventListener('input', (e) => {
+    currentRotation = e.target.value;
+    updateLogoTransform();
+});
+
+// 3. Función Maestra de Transformación
+function updateLogoTransform() {
+    // Usamos transform-origin para que rote y escale desde su propio centro
+    logo.style.width = currentScale + 'px';
+    logo.style.transform = `translate(calc(-50% + ${xOffset}px), calc(-50% + ${yOffset}px)) rotate(${currentRotation}deg)`;
+    logo.style.transformOrigin = "center";
+}
+
+// 4. Lógica de Arrastre Mejorada
+let isDragging = false;
+let initialX, initialY;
+
+const container = document.querySelector('.image-container');
+
+container.addEventListener("mousedown", dragStart);
+container.addEventListener("touchstart", dragStart, { passive: false });
+window.addEventListener("mousemove", drag);
+window.addEventListener("touchmove", drag, { passive: false });
+window.addEventListener("mouseup", dragEnd);
+window.addEventListener("touchend", dragEnd);
+
+function dragStart(e) {
+    if (e.target === logo) {
+        isDragging = true;
+        const clientX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
+        initialX = clientX - xOffset;
+        initialY = clientY - yOffset;
+    }
+}
+
+function drag(e) {
+    if (isDragging) {
+        e.preventDefault();
+        const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
+        xOffset = clientX - initialX;
+        yOffset = clientY - initialY;
+        updateLogoTransform();
+    }
+}
+
+function dragEnd() { isDragging = false; }
+
+function resetLogo() {
+    xOffset = 0; yOffset = 0;
+    currentScale = 100; currentRotation = 0;
+    scaleRange.value = 100; rotateRange.value = 0;
+    updateLogoTransform();
+}
+</script>
+</body>
+</html>
