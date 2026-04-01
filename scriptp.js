@@ -48,10 +48,20 @@ function changeView() {
     resetLogo(); // Limpia la posición del logo para que no quede "flotando" en el aire
 }
 
-    function addToCart() {
+    async function addToCart() {
     const isDTF = product.category === 'dtf';
     
-    // Obtener nombres de todos los logos subidos
+    // 1. Capturar el diseño actual antes de guardarlo
+    const canvasContainer = document.getElementById('canvas-container');
+    if (activeLayer) activeLayer.style.outline = "none"; // Quitar borde de selección
+
+    const canvas = await html2canvas(canvasContainer, {
+        useCORS: true,
+        backgroundColor: null
+    });
+    const designImage = canvas.toDataURL("image/png"); // Guardamos la imagen en base64
+
+    // 2. Obtener nombres de logos
     const layers = document.querySelectorAll('.logo-layer');
     let allLogos = Array.from(layers).map(l => l.dataset.name).join(", ");
 
@@ -61,9 +71,10 @@ function changeView() {
         size: document.getElementById('size').value,
         color: document.getElementById('color').value,
         side: isDTF ? document.getElementById('view-side').value : "N/A", 
-        position: "Múltiples posiciones (ver previo)", 
+        position: "Ver imagen adjunta", 
         notes: document.getElementById('notes').value,
-        logoName: allLogos || "Sin logo"
+        logoName: allLogos || "Sin logo",
+        preview: designImage // <--- NUEVA PROPIEDAD: Guardamos la foto aquí
     };
 
     cart.push(item);
@@ -131,43 +142,33 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 
-async function checkoutWhatsApp() {
+function checkoutWhatsApp() {
     if(cart.length === 0) {
         showGenericAlert("ARSENAL VACÍO", "Selecciona tu equipo antes de ir a la batalla.");
         return;
     }
 
-    // 1. Avisar al usuario que se está preparando su diseño
-    showGenericAlert("GENERANDO DISEÑO", "Espera un momento mientras preparamos tu arsenal...");
+    showGenericAlert("PREPARANDO DESCARGAS", "Se descargarán los diseños de tu carrito. Por favor, adjúntalos en el chat.");
 
-    // 2. "Fotografiar" el contenedor del diseño
-    const canvasContainer = document.getElementById('canvas-container');
-    
-    // Limpiamos el borde de selección para que no salga en la foto
-    if (activeLayer) activeLayer.style.outline = "none";
-
-    const canvas = await html2canvas(canvasContainer, {
-        useCORS: true, // Importante para cargar imágenes de otros dominios
-        backgroundColor: null
+    // 1. Descargar cada imagen guardada en el carrito
+    cart.forEach((item, index) => {
+        if (item.preview) {
+            const link = document.createElement('a');
+            link.download = `Diseno_${index + 1}_${item.name.replace(/\s+/g, '_')}.png`;
+            link.href = item.preview;
+            link.click();
+        }
     });
 
-    // 3. Convertir a imagen y descargar automáticamente
-    const imageData = canvas.toDataURL("image/png");
-    const link = document.createElement('a');
-    link.download = `Diseno_BOB_Store_${Date.now()}.png`;
-    link.href = imageData;
-    link.click();
-
-    // 4. Preparar mensaje de WhatsApp
+    // 2. Preparar mensaje de WhatsApp
     const phone = "525546628442";
     let message = "🏴‍☠️ *ORDEN DE PERSONALIZACIÓN B.O.B* 🏴‍☠️\n\n";
-    message += "⚠️ *HE DESCARGADO MI DISEÑO, LO ADJUNTO A CONTINUACIÓN:* ⚠️\n\n";
+    message += "⚠️ *HE ADJUNTO LOS DISEÑOS DESCARGADOS ABAJO* ⚠️\n\n";
 
     cart.forEach((item, i) => {
         message += `*${i+1}. ${item.name}*\n`;
         message += `   └ Talla: ${item.size} | Color: ${item.color}\n`;
-        message += `   └ Lado: ${item.side}\n`;
-        message += `   └ Logo: ${item.logoName}\n`;
+        message += `   └ Lado: ${item.side} | Logo: ${item.logoName}\n`;
         if(item.notes) message += `   └ Notas: ${item.notes}\n`;
         message += `   └ Precio: $${item.price}\n\n`;
     });
@@ -175,10 +176,10 @@ async function checkoutWhatsApp() {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
     message += `*TOTAL A PAGAR: $${total} MXN*`;
 
-    // 5. Abrir WhatsApp
+    // 3. Abrir WhatsApp tras un breve delay para permitir las descargas
     setTimeout(() => {
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
-    }, 1000);
+    }, 1500);
 }
 
 // Opcional: Cerrar cualquier modal al hacer clic fuera del contenido
