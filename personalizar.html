@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personaliza tu Gear | B.O.B Store</title>
+    <link rel="stylesheet" href="stylep.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+    <div class="logo">B.O.B<span> CUSTOM</span></div>
+    <a href="index.html" class="back-link">← VOLVER A TIENDA</a>
+</header>
+
+    <div class="custom-container">
+        <div class="preview-box">
+    <h2 id="product-name">Cargando...</h2>
+    <div class="image-container" id="canvas-container">
+    <img id="product-img" src="" alt="Vista previa">
+    </div>
+    <div class="price-tag" id="product-price">$0 MXN</div>
+</div>
+
+        <div class="form-box">
+            <div class="input-group">
+                <div class="input-group" id="view-side-group" style="display: none;">
+    <label>Lado de la prenda</label>
+    <select id="view-side" onchange="changeView()">
+        <option value="Frente">Frente</option>
+        <option value="Espalda">Espalda</option>
+    </select>
+</div>
+                <label>Talla / Medida</label>
+                <select id="size">
+                    <option value="S">Chica (S)</option>
+                    <option value="M">Mediana (M)</option>
+                    <option value="L">Grande (L)</option>
+                    <option value="XL">Extra Grande (XL)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+    <label>Color de la prenda/artículo</label>
+    <select id="color">
+        </select>
+    <small style="color: #888; font-size: 0.7rem; display: block; margin-top: 5px;">
+        * Stock según tienda, sujeto a existencias.
+    </small>
+</div>
+
+            <div class="input-group">
+    <label>Sube tu imagen o logo</label>
+    <input type="file" id="logo-file" accept="image/*">
+
+    <div id="edit-controls" style="display: none;" class="control-group">
+        <div style="margin-bottom: 10px;">
+            <label>Tamaño del Logo</label>
+            <input type="range" id="scale-range" min="30" max="300" value="100" style="width:100%">
+        </div>
+        <div>
+            <label>Rotación</label>
+            <input type="range" id="rotate-range" min="0" max="360" value="0" style="width:100%">
+        </div>
+        <button onclick="resetLogo()" style="background:none; border:none; color:var(--primary); font-size:0.7rem; cursor:pointer; margin-top:5px;">RESETEAR LOGO</button>
+    </div>
+</div>
+
+            <div class="input-group">
+                <label>Instrucciones adicionales</label>
+                <textarea id="notes" rows="3" placeholder="Ej: Quiero mi nombre arriba del logo..."></textarea>
+            </div>
+
+            <button class="btn" id="add-to-cart-btn" style="width: 100%;" onclick="addToCart()">
+                🛒 AÑADIR AL CARRITO
+            </button>
+        </div>
+    </div>
+
+    <div id="cart-floating" class="cart-floating" style="display:none; position: fixed; bottom: 20px; right: 20px; width: 300px; background: var(--gray); border: 2px solid var(--primary); border-radius: 10px; padding: 15px; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <h3 style="font-family: 'Metal Mania'; color: var(--primary); margin-top: 0;">🛒 Tu Carrito</h3>
+        <div id="cart-items" style="max-height: 200px; overflow-y: auto; font-size: 0.8rem; margin-bottom: 15px;"></div>
+        <div style="border-top: 1px solid #444; padding-top: 10px; font-weight: bold;">
+            Total: $<span id="cart-total">0</span> MXN
+        </div>
+        <button class="btn" onclick="checkoutWhatsApp()" style="width: 100%; margin-top: 10px; font-size: 0.8rem;">Enviar Pedido Completo</button>
+        <button onclick="toggleCart()" style="background: none; border: none; color: white; cursor: pointer; display: block; width: 100%; margin-top: 5px; font-size: 0.7rem;">Cerrar Vista</button>
+    </div>
+
+    <div onclick="toggleCart()" style="position: fixed; bottom: 20px; left: 20px; background: var(--primary); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2000; box-shadow: 0 0 10px var(--primary);">
+        🛒
+    </div>
+
+    <div id="custom-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2>📦 ¡ARSENAL ACTUALIZADO!</h2>
+        <p>Tu artículo ha sido añadido con éxito.</p>
+        <div class="modal-buttons">
+            <button class="btn btn-secondary" onclick="closeModal('custom-modal')">SEGUIR PERSONALIZANDO</button>
+            <a href="index.html" class="btn btn-dark">VER MÁS PRODUCTOS</a>
+        </div>
+    </div>
+</div>
+
+<div id="generic-alert-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 id="alert-title">⚠️ AVISO</h2>
+        <p id="alert-message">Mensaje de alerta.</p>
+        <button class="btn" onclick="closeModal('generic-alert-modal')" style="width: 100%;">ENTENDIDO</button>
+    </div>
+</div>
+
+<script src="scriptp.js"></script>
+</body>
+</html>
