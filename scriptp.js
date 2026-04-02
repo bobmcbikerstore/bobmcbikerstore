@@ -51,34 +51,48 @@ function changeView() {
     async function addToCart() {
     const isDTF = product.category === 'dtf';
     
-    // 1. Capturar el diseño actual antes de guardarlo
+    // 1. "Fotografiar" el diseño actual
     const canvasContainer = document.getElementById('canvas-container');
-    if (activeLayer) activeLayer.style.outline = "none"; // Quitar borde de selección
+    
+    // Quitamos el borde de edición para que no salga en la descarga
+    if (activeLayer) activeLayer.style.outline = "none";
 
     const canvas = await html2canvas(canvasContainer, {
         useCORS: true,
         backgroundColor: null
     });
-    const designImage = canvas.toDataURL("image/png"); // Guardamos la imagen en base64
+    
+    const designImage = canvas.toDataURL("image/png");
 
-    // 2. Obtener nombres de logos
+    // 2. DESCARGA AUTOMÁTICA INMEDIATA
+    const link = document.createElement('a');
+    // Creamos un nombre de archivo limpio basado en el producto y la hora
+    const fileName = `BOB_Store_${product.name.replace(/\s+/g, '_')}_${Date.now()}.png`;
+    link.download = fileName;
+    link.href = designImage;
+    link.click();
+
+    // 3. Obtener nombres de logos subidos
     const layers = document.querySelectorAll('.logo-layer');
     let allLogos = Array.from(layers).map(l => l.dataset.name).join(", ");
 
+    // 4. Crear el objeto del carrito con la imagen guardada
     const item = {
         name: product.name,
         price: product.price,
         size: document.getElementById('size').value,
         color: document.getElementById('color').value,
         side: isDTF ? document.getElementById('view-side').value : "N/A", 
-        position: "Ver imagen adjunta", 
         notes: document.getElementById('notes').value,
         logoName: allLogos || "Sin logo",
-        preview: designImage // <--- NUEVA PROPIEDAD: Guardamos la foto aquí
+        preview: designImage // Guardamos el base64 por si se necesita después
     };
 
+    // 5. Guardar en el almacenamiento local
     cart.push(item);
     localStorage.setItem('bob_cart', JSON.stringify(cart));
+    
+    // 6. Actualizar Interfaz y mostrar confirmación
     updateCartUI();
     document.getElementById('custom-modal').style.display = 'flex';
 }
@@ -148,22 +162,9 @@ function checkoutWhatsApp() {
         return;
     }
 
-    showGenericAlert("PREPARANDO DESCARGAS", "Se descargarán los diseños de tu carrito. Por favor, adjúntalos en el chat.");
-
-    // 1. Descargar cada imagen guardada en el carrito
-    cart.forEach((item, index) => {
-        if (item.preview) {
-            const link = document.createElement('a');
-            link.download = `Diseno_${index + 1}_${item.name.replace(/\s+/g, '_')}.png`;
-            link.href = item.preview;
-            link.click();
-        }
-    });
-
-    // 2. Preparar mensaje de WhatsApp
     const phone = "525546628442";
     let message = "🏴‍☠️ *ORDEN DE PERSONALIZACIÓN B.O.B* 🏴‍☠️\n\n";
-    message += "⚠️ *HE ADJUNTO LOS DISEÑOS DESCARGADOS ABAJO* ⚠️\n\n";
+    message += "⚠️ *ADJUNTO LOS DISEÑOS QUE SE DESCARGARON AL AÑADIR AL CARRITO* ⚠️\n\n";
 
     cart.forEach((item, i) => {
         message += `*${i+1}. ${item.name}*\n`;
@@ -176,10 +177,7 @@ function checkoutWhatsApp() {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
     message += `*TOTAL A PAGAR: $${total} MXN*`;
 
-    // 3. Abrir WhatsApp tras un breve delay para permitir las descargas
-    setTimeout(() => {
-        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
-    }, 1500);
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
 }
 
 // Opcional: Cerrar cualquier modal al hacer clic fuera del contenido
