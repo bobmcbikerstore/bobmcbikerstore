@@ -48,14 +48,12 @@ function changeView() {
     resetLogo(); // Limpia la posición del logo para que no quede "flotando" en el aire
 }
 
-    async function addToCart() {
-    const isDTF = product.category === 'dtf';
-
-    // 1. "Fotografiar" el diseño actual
+// --- NUEVA FUNCIÓN: SOLO DESCARGA ---
+async function downloadDesign() {
     const canvasContainer = document.getElementById('canvas-container');
 
-    // Quitamos el borde de edición para que no salga en la descarga
-    if (activeLayer) activeLayer.style.outline = "none";
+    // Desactivamos selección visual para la "foto"
+    if (activeLayer) activeLayer.classList.remove('active');
 
     const canvas = await html2canvas(canvasContainer, {
         useCORS: true,
@@ -63,20 +61,23 @@ function changeView() {
     });
 
     const designImage = canvas.toDataURL("image/png");
-
-    // 2. DESCARGA AUTOMÁTICA INMEDIATA
     const link = document.createElement('a');
-    // Creamos un nombre de archivo limpio basado en el producto y la hora
-    const fileName = `BOB_Store_${product.name.replace(/\s+/g, '_')}_${Date.now()}.png`;
+    const fileName = `BOB_Diseno_${product.name.replace(/\s+/g, '_')}_${Date.now()}.png`;
+
     link.download = fileName;
     link.href = designImage;
     link.click();
 
-    // 3. Obtener nombres de logos subidos
-    const layers = document.querySelectorAll('.logo-layer');
+    showGenericAlert("DISEÑO GUARDADO", "Tu imagen se ha descargado. ¡No olvides adjuntarla al enviar tu pedido!");
+}
+
+// --- FUNCIÓN CARRITO: SOLO DATOS ---
+function addToCart() {
+    const isDTF = product.category === 'dtf';
+    const layers = document.querySelectorAll('.logo-wrapper');
     let allLogos = Array.from(layers).map(l => l.dataset.name).join(", ");
 
-    // 4. Crear el objeto del carrito con la imagen guardada
+    // Creamos el objeto SIN procesar el canvas (más rápido)
     const item = {
         name: product.name,
         price: product.price,
@@ -84,15 +85,13 @@ function changeView() {
         color: document.getElementById('color').value,
         side: isDTF ? document.getElementById('view-side').value : "N/A",
         notes: document.getElementById('notes').value,
-        logoName: allLogos || "Sin logo",
-        preview: designImage // Guardamos el base64 por si se necesita después
+        logoName: allLogos || "Sin logo"
+        // Quitamos la propiedad 'preview' base64 para no saturar el almacenamiento
     };
 
-    // 5. Guardar en el almacenamiento local
     cart.push(item);
     localStorage.setItem('bob_cart', JSON.stringify(cart));
 
-    // 6. Actualizar Interfaz y mostrar confirmación
     updateCartUI();
     document.getElementById('custom-modal').style.display = 'flex';
 }
@@ -164,7 +163,7 @@ function checkoutWhatsApp() {
 
     const phone = "525546628442";
     let message = "🏴‍☠️ *ORDEN DE PERSONALIZACIÓN B.O.B* 🏴‍☠️\n\n";
-    message += "⚠️ *ADJUNTO LOS DISEÑOS QUE SE DESCARGARON AL AÑADIR AL CARRITO* ⚠️\n\n";
+    message += "📢 *IMPORTANTE: Te enviaré las fotos de los diseños a continuación* 📢\n\n";
 
     cart.forEach((item, i) => {
         message += `*${i+1}. ${item.name}*\n`;
@@ -186,18 +185,17 @@ window.onclick = function(event) {
         event.target.style.display = 'none';
     }
 }
-
-    // Cambiar la función del botón original de "Enviar a WhatsApp" por "Añadir al carrito"
-    document.querySelector('.form-box .btn').innerText = "🛒 AÑADIR AL CARRITO";
-    document.querySelector('.form-box .btn').onclick = addToCart;
-
     // Inicializar UI si ya hay cosas
     window.onload = updateCartUI;
 
 // --- NUEVA LÓGICA MULTI-CAPA ---
 let activeLayer = null;
+let isDragging = false;
+let isResizing = false;
+let isRotating = false;
+let startX, startY, startWidth, startAngle;
 
-// 1. Manejo de archivos (Permite subir varios a la vez o uno tras otro)
+// Manejo de archivos (Subir imagen)
 document.getElementById('logo-file').addEventListener('change', function(e) {
     const files = e.target.files;
     if (files.length === 0) return;
@@ -211,104 +209,127 @@ document.getElementById('logo-file').addEventListener('change', function(e) {
     });
 
     document.getElementById('edit-controls').style.display = 'block';
-
-    // LIMPIEZA CRUCIAL:
-    // Reseteamos el valor del input para que el evento 'change'
-    // se dispare incluso si subes el mismo archivo dos veces.
-    this.value = "";
+    this.value = ""; // Limpiar input
 });
 
-// 2. Crear capas dinámicas
+// 1. Crear capa con manejadores
 function createImageLayer(src, name) {
     const container = document.getElementById('canvas-container');
+    const wrapper = document.createElement('div');
+    wrapper.className = 'logo-wrapper';
+    wrapper.dataset.name = name;
+    wrapper.style.left = '50%';
+    wrapper.style.top = '50%';
+    wrapper.style.width = '100px';
+    wrapper.dataset.angle = 0; // Guardamos el ángulo aquí
+
     const newImg = document.createElement('img');
-
     newImg.src = src;
-    newImg.className = 'logo-layer'; // Clase para CSS
-    newImg.dataset.name = name;
-    newImg.style.width = '100px';
-    newImg.style.position = 'absolute';
-    newImg.style.left = '50%';
-    newImg.style.top = '50%';
-    newImg.style.cursor = 'move';
-    newImg.style.transform = 'translate(-50%, -50%)';
+    newImg.className = 'logo-layer';
 
-    // Seleccionar al hacer clic
-    newImg.addEventListener('mousedown', (e) => setActiveLayer(e.target));
-    newImg.addEventListener('touchstart', (e) => setActiveLayer(e.target));
+    const delBtn = document.createElement('div');
+    delBtn.className = 'delete-btn';
+    delBtn.innerHTML = '✕';
+    delBtn.onclick = (e) => { e.stopPropagation(); wrapper.remove(); };
 
-    container.appendChild(newImg);
-    setActiveLayer(newImg);
+    // Agregamos los manejadores visuales
+    const resizer = document.createElement('div');
+    resizer.className = 'resizer';
+
+    const rotator = document.createElement('div');
+    rotator.className = 'rotator';
+
+    wrapper.appendChild(newImg);
+    wrapper.appendChild(delBtn);
+    wrapper.appendChild(resizer);
+    wrapper.appendChild(rotator);
+    container.appendChild(wrapper);
+
+    setActiveLayer(wrapper);
 }
 
 function setActiveLayer(el) {
-    if (activeLayer) activeLayer.style.outline = "none";
+    if (activeLayer) activeLayer.classList.remove('active');
     activeLayer = el;
-    activeLayer.style.outline = "2px dashed #ff0000"; // Borde rojo para saber cuál editas
+    if (activeLayer) {
+        activeLayer.classList.add('active');
+        document.getElementById('edit-controls').style.display = 'block';
+    }
 }
 
-// 3. Controles de Escala y Rotación
-document.getElementById('scale-range').oninput = (e) => {
-    if (activeLayer) activeLayer.style.width = e.target.value + 'px';
-};
+// 2. Lógica Maestra de Interacción
+document.addEventListener('mousedown', initAction);
+document.addEventListener('touchstart', initAction, { passive: false });
 
-document.getElementById('rotate-range').oninput = (e) => {
-    if (activeLayer) {
-        // Mantenemos el centrado del transform original
-        activeLayer.style.transform = `translate(-50%, -50%) rotate(${e.target.value}deg)`;
+function initAction(e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    if (e.target.classList.contains('resizer')) {
+        isResizing = true;
+        startX = clientX;
+        startWidth = activeLayer.offsetWidth;
+        e.preventDefault();
     }
-};
-
-// 4. Arrastre (Drag)
-// --- LÓGICA DE ARRASTRE UNIFICADA (PC Y MÓVIL) ---
-let isDragging = false;
-let startX, startY;
-
-// Función común para iniciar el movimiento
-function startDragging(e) {
-    const target = e.target;
-    if (target.classList.contains('logo-layer')) {
+    else if (e.target.classList.contains('rotator')) {
+        isRotating = true;
+        const rect = activeLayer.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        startAngle = Math.atan2(clientY - centerY, clientX - centerX);
+        e.preventDefault();
+    }
+    else if (e.target.closest('.logo-wrapper')) {
         isDragging = true;
+        const target = e.target.closest('.logo-wrapper');
         setActiveLayer(target);
-
-        // Detectar si es toque o clic
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-        // Calculamos posición relativa
         startX = clientX - target.offsetLeft;
         startY = clientY - target.offsetTop;
-
-        // Evitar que la pantalla se mueva al arrastrar en celular
-        if (e.touches) e.preventDefault();
+    } else {
+        if (activeLayer && !e.target.closest('#edit-controls')) {
+            activeLayer.classList.remove('active');
+            activeLayer = null;
+        }
     }
 }
 
-// Función común para mover
-function moveLayer(e) {
-    if (isDragging && activeLayer) {
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+document.addEventListener('mousemove', doAction);
+document.addEventListener('touchmove', doAction, { passive: false });
 
+function doAction(e) {
+    if (!activeLayer) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    if (isResizing) {
+        const newWidth = startWidth + (clientX - startX);
+        if (newWidth > 30) activeLayer.style.width = newWidth + 'px';
+        e.preventDefault();
+    }
+   else if (isRotating) {
+        const rect = activeLayer.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const currentAngle = Math.atan2(clientY - centerY, clientX - centerX);
+
+        // Convertir a grados y ajustar
+        let rotation = (currentAngle - startAngle) * (180 / Math.PI);
+
+        // Usar un dataset para mantener la rotación acumulada si prefieres,
+        // o simplemente aplicar el cálculo:
+        activeLayer.style.transform = `rotate(${rotation}deg)`;
+        e.preventDefault();
+    }
+    else if (isDragging) {
         activeLayer.style.left = (clientX - startX) + 'px';
         activeLayer.style.top = (clientY - startY) + 'px';
-
-        // Evitar scroll accidental en móvil
-        if (e.touches) e.preventDefault();
+        e.preventDefault();
     }
 }
 
-// Eventos de Mouse (Escritorio)
-document.addEventListener('mousedown', startDragging);
-document.addEventListener('mousemove', moveLayer);
-document.addEventListener('mouseup', () => isDragging = false);
+document.addEventListener('mouseup', () => { isDragging = isResizing = isRotating = false; });
+document.addEventListener('touchend', () => { isDragging = isResizing = isRotating = false; });
 
-// Eventos de Touch (Celular)
-document.addEventListener('touchstart', startDragging, { passive: false });
-document.addEventListener('touchmove', moveLayer, { passive: false });
-document.addEventListener('touchend', () => isDragging = false);
-
-// 5. Resetear (Elimina la capa seleccionada)
 function resetLogo() {
     if (activeLayer) {
         activeLayer.remove();
