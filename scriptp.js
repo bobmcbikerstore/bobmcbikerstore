@@ -37,23 +37,23 @@
 function changeView() {
     const side = document.getElementById('view-side').value;
     const productImg = document.getElementById('product-img');
-    
+
     // Si es espalda, usa imgBack; si es frente, usa img original
     if (side === 'Espalda' && product.imgBack) {
         productImg.src = product.imgBack;
     } else {
         productImg.src = product.img;
     }
-    
+
     resetLogo(); // Limpia la posición del logo para que no quede "flotando" en el aire
 }
 
     async function addToCart() {
     const isDTF = product.category === 'dtf';
-    
+
     // 1. "Fotografiar" el diseño actual
     const canvasContainer = document.getElementById('canvas-container');
-    
+
     // Quitamos el borde de edición para que no salga en la descarga
     if (activeLayer) activeLayer.style.outline = "none";
 
@@ -61,7 +61,7 @@ function changeView() {
         useCORS: true,
         backgroundColor: null
     });
-    
+
     const designImage = canvas.toDataURL("image/png");
 
     // 2. DESCARGA AUTOMÁTICA INMEDIATA
@@ -82,7 +82,7 @@ function changeView() {
         price: product.price,
         size: document.getElementById('size').value,
         color: document.getElementById('color').value,
-        side: isDTF ? document.getElementById('view-side').value : "N/A", 
+        side: isDTF ? document.getElementById('view-side').value : "N/A",
         notes: document.getElementById('notes').value,
         logoName: allLogos || "Sin logo",
         preview: designImage // Guardamos el base64 por si se necesita después
@@ -91,7 +91,7 @@ function changeView() {
     // 5. Guardar en el almacenamiento local
     cart.push(item);
     localStorage.setItem('bob_cart', JSON.stringify(cart));
-    
+
     // 6. Actualizar Interfaz y mostrar confirmación
     updateCartUI();
     document.getElementById('custom-modal').style.display = 'flex';
@@ -195,11 +195,13 @@ window.onclick = function(event) {
     window.onload = updateCartUI;
 
 // --- NUEVA LÓGICA MULTI-CAPA ---
-let activeLayer = null; 
+let activeLayer = null;
 
-// 1. Manejo de archivos (Permite subir varios)
+// 1. Manejo de archivos (Permite subir varios a la vez o uno tras otro)
 document.getElementById('logo-file').addEventListener('change', function(e) {
     const files = e.target.files;
+    if (files.length === 0) return;
+
     Array.from(files).forEach(file => {
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -207,18 +209,24 @@ document.getElementById('logo-file').addEventListener('change', function(e) {
         };
         reader.readAsDataURL(file);
     });
+
     document.getElementById('edit-controls').style.display = 'block';
+
+    // LIMPIEZA CRUCIAL:
+    // Reseteamos el valor del input para que el evento 'change'
+    // se dispare incluso si subes el mismo archivo dos veces.
+    this.value = "";
 });
 
 // 2. Crear capas dinámicas
 function createImageLayer(src, name) {
     const container = document.getElementById('canvas-container');
     const newImg = document.createElement('img');
-    
+
     newImg.src = src;
     newImg.className = 'logo-layer'; // Clase para CSS
     newImg.dataset.name = name;
-    newImg.style.width = '100px'; 
+    newImg.style.width = '100px';
     newImg.style.position = 'absolute';
     newImg.style.left = '50%';
     newImg.style.top = '50%';
@@ -252,28 +260,53 @@ document.getElementById('rotate-range').oninput = (e) => {
 };
 
 // 4. Arrastre (Drag)
+// --- LÓGICA DE ARRASTRE UNIFICADA (PC Y MÓVIL) ---
 let isDragging = false;
 let startX, startY;
 
-document.addEventListener('mousedown', (e) => {
-    if (e.target.classList.contains('logo-layer')) {
+// Función común para iniciar el movimiento
+function startDragging(e) {
+    const target = e.target;
+    if (target.classList.contains('logo-layer')) {
         isDragging = true;
-        activeLayer = e.target;
+        setActiveLayer(target);
+
+        // Detectar si es toque o clic
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
         // Calculamos posición relativa
-        const rect = activeLayer.getBoundingClientRect();
-        startX = e.clientX - activeLayer.offsetLeft;
-        startY = e.clientY - activeLayer.offsetTop;
-    }
-});
+        startX = clientX - target.offsetLeft;
+        startY = clientY - target.offsetTop;
 
-document.addEventListener('mousemove', (e) => {
+        // Evitar que la pantalla se mueva al arrastrar en celular
+        if (e.touches) e.preventDefault();
+    }
+}
+
+// Función común para mover
+function moveLayer(e) {
     if (isDragging && activeLayer) {
-        activeLayer.style.left = (e.clientX - startX) + 'px';
-        activeLayer.style.top = (e.clientY - startY) + 'px';
-    }
-});
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
+        activeLayer.style.left = (clientX - startX) + 'px';
+        activeLayer.style.top = (clientY - startY) + 'px';
+
+        // Evitar scroll accidental en móvil
+        if (e.touches) e.preventDefault();
+    }
+}
+
+// Eventos de Mouse (Escritorio)
+document.addEventListener('mousedown', startDragging);
+document.addEventListener('mousemove', moveLayer);
 document.addEventListener('mouseup', () => isDragging = false);
+
+// Eventos de Touch (Celular)
+document.addEventListener('touchstart', startDragging, { passive: false });
+document.addEventListener('touchmove', moveLayer, { passive: false });
+document.addEventListener('touchend', () => isDragging = false);
 
 // 5. Resetear (Elimina la capa seleccionada)
 function resetLogo() {
@@ -307,7 +340,7 @@ if(product) {
     if(product.category === 'dtf') {
         // Mostrar selector de lado
         document.getElementById('view-side-group').style.display = 'block';
-        
+
         // Cargar paleta completa de colores DTF
         dtfColors.forEach(color => {
             let opt = document.createElement('option');
@@ -318,7 +351,7 @@ if(product) {
     } else {
         // Ocultar selector de lado
         document.getElementById('view-side-group').style.display = 'none';
-        
+
         // Cargar colores de Láser
         laserColors.forEach(color => {
             let opt = document.createElement('option');
