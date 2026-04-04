@@ -1,116 +1,384 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personaliza tu Gear | B.O.B Store</title>
-    <link rel="stylesheet" href="stylep.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-    <div class="logo">B.O.B<span> CUSTOM</span></div>
-    <a href="index.html" class="back-link">← VOLVER A TIENDA</a>
-</header>
+ const inventory = [
+    { id: 1, category: 'dtf', name: "Playera Algodón Hombre", price: 250, img: "img/ph.png", imgBack: "img/phr.png" },
+    { id: 2, category: 'dtf', name: "Playera Algodón Mujer", price: 250, img: "img/pm.png", imgBack: "img/pmr.png" },
+    { id: 3, category: 'dtf', name: "Sudadera Unisex Capucha", price: 550, img: "img/scf.png", imgBack: "img/sc.png" },
+    { id: 4, category: 'dtf', name: "Sudadera Cerrada", price: 480, img: "img/sc1.png", imgBack: "img/scr1.png" },
+    { id: 5, category: 'dtf', name: "Playera Dri-fit", price: 280, img: "img/pd.png", imgBack: "img/pdr.png" },
+    { id: 6, category: 'dtf', name: "Gorra de Malla", price: 180, img: "img/gm.png"},
+    { id: 7, category: 'laser', name: "Placas Militares", price: 150, img: "img/pm1.png" },
+    { id: 8, category: 'laser', name: "Licorera Metálica", price: 320, img: "img/lm.jpg" },
+    { id: 9, category: 'laser', name: "Navaja Táctica", price: 450, img: "img/nt.jpg" },
+    { id: 10, category: 'laser', name: "Porta Llaves", price: 200, img: "img/pll.png" },
+    { id: 11, category: 'laser', name: "Portacascos", price: 650, img: "img/pc.jpg" },
+    { id: 12, category: 'laser', name: "Libreta de Piel", price: 380, img: "img/l.png" }
+];
 
-    <div class="custom-container">
-        <div class="preview-box">
-    <h2 id="product-name">Cargando...</h2>
-    <div class="image-container" id="canvas-container">
-    <img id="product-img" src="" alt="Vista previa">
-    </div>
-    <div class="price-tag" id="product-price">$0 MXN</div>
-</div>
+    // Cargar carrito desde LocalStorage al iniciar
+    let cart = JSON.parse(localStorage.getItem('bob_cart')) || [];
 
-        <div class="form-box">
-            <div class="input-group">
-                <div class="input-group" id="view-side-group" style="display: none;">
-    <label>Lado de la prenda</label>
-    <select id="view-side" onchange="changeView()">
-        <option value="Frente">Frente</option>
-        <option value="Espalda">Espalda</option>
-    </select>
-</div>
-                <label>Talla / Medida</label>
-                <select id="size">
-                    <option value="S">Chica (S)</option>
-                    <option value="M">Mediana (M)</option>
-                    <option value="L">Grande (L)</option>
-                    <option value="XL">Extra Grande (XL)</option>
-                </select>
-            </div>
+    const params = new URLSearchParams(window.location.search);
+    const productId = parseInt(params.get('id'));
+    const product = inventory.find(p => p.id === productId);
 
-            <div class="input-group">
-    <label>Color de la prenda/artículo</label>
-    <select id="color">
-        </select>
-    <small style="color: #888; font-size: 0.7rem; display: block; margin-top: 5px;">
-        * Stock según tienda, sujeto a existencias.
-    </small>
-</div>
+    if(product) {
+    document.getElementById('product-name').innerText = product.name;
+    document.getElementById('product-img').src = product.img;
+    document.getElementById('product-price').innerText = `$${product.price} MXN`;
 
-            <div class="input-group">
-    <label>Sube tu imagen o logo</label>
-<input type="file" id="logo-file" accept="image/*" multiple>
+    // MOSTRAR SELECTOR SOLO SI ES DTF
+    if(product.category === 'dtf') {
+        document.getElementById('view-side-group').style.display = 'block';
+    } else {
+        document.getElementById('view-side-group').style.display = 'none';
+    }
+}
 
-    <div id="edit-controls" style="display: none;" class="control-group">
-        <div style="margin-bottom: 10px;">
-            <label>Tamaño del Logo</label>
-            <input type="range" id="scale-range" min="30" max="300" value="100" style="width:100%">
-        </div>
-        <div>
-            <label>Rotación</label>
-            <input type="range" id="rotate-range" min="0" max="360" value="0" style="width:100%">
-        </div>
-        <button onclick="resetLogo()" style="background:none; border:none; color:var(--primary); font-size:0.7rem; cursor:pointer; margin-top:5px;">RESETEAR LOGO</button>
-    </div>
-</div>
+// Función para cambiar la imagen
+function changeView() {
+    const side = document.getElementById('view-side').value;
+    const productImg = document.getElementById('product-img');
 
-            <div class="input-group">
-                <label>Instrucciones adicionales</label>
-                <textarea id="notes" rows="3" placeholder="Ej: Quiero mi nombre arriba del logo..."></textarea>
-            </div>
+    // Si es espalda, usa imgBack; si es frente, usa img original
+    if (side === 'Espalda' && product.imgBack) {
+        productImg.src = product.imgBack;
+    } else {
+        productImg.src = product.img;
+    }
 
-            <button class="btn" id="add-to-cart-btn" style="width: 100%;" onclick="addToCart()">
-                🛒 AÑADIR AL CARRITO
-            </button>
-        </div>
-    </div>
+    resetLogo(); // Limpia la posición del logo para que no quede "flotando" en el aire
+}
 
-    <div id="cart-floating" class="cart-floating" style="display:none; position: fixed; bottom: 20px; right: 20px; width: 300px; background: var(--gray); border: 2px solid var(--primary); border-radius: 10px; padding: 15px; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-        <h3 style="font-family: 'Metal Mania'; color: var(--primary); margin-top: 0;">🛒 Tu Carrito</h3>
-        <div id="cart-items" style="max-height: 200px; overflow-y: auto; font-size: 0.8rem; margin-bottom: 15px;"></div>
-        <div style="border-top: 1px solid #444; padding-top: 10px; font-weight: bold;">
-            Total: $<span id="cart-total">0</span> MXN
-        </div>
-        <button class="btn" onclick="checkoutWhatsApp()" style="width: 100%; margin-top: 10px; font-size: 0.8rem;">Enviar Pedido Completo</button>
-        <button onclick="toggleCart()" style="background: none; border: none; color: white; cursor: pointer; display: block; width: 100%; margin-top: 5px; font-size: 0.7rem;">Cerrar Vista</button>
-    </div>
+// --- NUEVA FUNCIÓN: SOLO DESCARGA ---
+async function downloadDesign() {
+    const canvasContainer = document.getElementById('canvas-container');
 
-    <div onclick="toggleCart()" style="position: fixed; bottom: 20px; left: 20px; background: var(--primary); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2000; box-shadow: 0 0 10px var(--primary);">
-        🛒
-    </div>
+    // Desactivamos selección visual para la "foto"
+    if (activeLayer) activeLayer.classList.remove('active');
 
-    <div id="custom-modal" class="modal-overlay">
-    <div class="modal-content">
-        <h2>📦 ¡ARSENAL ACTUALIZADO!</h2>
-        <p>Tu artículo ha sido añadido con éxito.</p>
-        <div class="modal-buttons">
-            <button class="btn btn-secondary" onclick="closeModal('custom-modal')">SEGUIR PERSONALIZANDO</button>
-            <a href="index.html" class="btn btn-dark">VER MÁS PRODUCTOS</a>
-        </div>
-    </div>
-</div>
+    const canvas = await html2canvas(canvasContainer, {
+        useCORS: true,
+        backgroundColor: null
+    });
 
-<div id="generic-alert-modal" class="modal-overlay">
-    <div class="modal-content">
-        <h2 id="alert-title">⚠️ AVISO</h2>
-        <p id="alert-message">Mensaje de alerta.</p>
-        <button class="btn" onclick="closeModal('generic-alert-modal')" style="width: 100%;">ENTENDIDO</button>
-    </div>
-</div>
+    const designImage = canvas.toDataURL("image/png");
+    const link = document.createElement('a');
+    const fileName = `BOB_Diseno_${product.name.replace(/\s+/g, '_')}_${Date.now()}.png`;
 
-<script src="scriptp.js"></script>
-</body>
-</html>
+    link.download = fileName;
+    link.href = designImage;
+    link.click();
+
+    showGenericAlert("DISEÑO GUARDADO", "Tu imagen se ha descargado. ¡No olvides adjuntarla al enviar tu pedido!");
+}
+
+// --- FUNCIÓN CARRITO: SOLO DATOS ---
+function addToCart() {
+    const isDTF = product.category === 'dtf';
+    const layers = document.querySelectorAll('.logo-wrapper');
+    let allLogos = Array.from(layers).map(l => l.dataset.name).join(", ");
+
+    // Creamos el objeto SIN procesar el canvas (más rápido)
+    const item = {
+        name: product.name,
+        price: product.price,
+        size: document.getElementById('size').value,
+        color: document.getElementById('color').value,
+        side: isDTF ? document.getElementById('view-side').value : "N/A",
+        notes: document.getElementById('notes').value,
+        logoName: allLogos || "Sin logo"
+        // Quitamos la propiedad 'preview' base64 para no saturar el almacenamiento
+    };
+
+    cart.push(item);
+    localStorage.setItem('bob_cart', JSON.stringify(cart));
+
+    updateCartUI();
+    document.getElementById('custom-modal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('custom-modal').style.display = 'none';
+}
+
+// Opcional: Cerrar modal si hacen clic fuera del contenido
+window.onclick = function(event) {
+    const modal = document.getElementById('custom-modal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+
+    function updateCartUI() {
+        const container = document.getElementById('cart-items');
+        const totalEl = document.getElementById('cart-total');
+        container.innerHTML = '';
+        let total = 0;
+
+        cart.forEach((item, index) => {
+            total += item.price;
+            container.innerHTML += `
+                <div style="border-bottom: 1px solid #333; padding: 5px 0; display: flex; justify-content: space-between;">
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <small>${item.size} | ${item.color}</small>
+                    </div>
+                    <div>
+                        $${item.price}
+                        <span onclick="removeItem(${index})" style="color:red; cursor:pointer; margin-left:5px;">✕</span>
+                    </div>
+                </div>
+            `;
+        });
+        totalEl.innerText = total;
+    }
+
+    function removeItem(index) {
+        cart.splice(index, 1);
+        localStorage.setItem('bob_cart', JSON.stringify(cart));
+        updateCartUI();
+    }
+
+    function toggleCart() {
+        const el = document.getElementById('cart-floating');
+        el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+    }
+
+    // Función para abrir cualquier modal con mensaje personalizado (opcional)
+function showGenericAlert(titulo, mensaje) {
+    document.getElementById('alert-title').innerText = titulo;
+    document.getElementById('alert-message').innerText = mensaje;
+    document.getElementById('generic-alert-modal').style.display = 'flex';
+}
+
+// Función corregida para cerrar cualquier modal por ID
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function checkoutWhatsApp() {
+    if(cart.length === 0) {
+        showGenericAlert("ARSENAL VACÍO", "Selecciona tu equipo antes de ir a la batalla.");
+        return;
+    }
+
+    const phone = "525546628442";
+    let message = "🏴‍☠️ *ORDEN DE PERSONALIZACIÓN B.O.B* 🏴‍☠️\n\n";
+    message += "📢 *IMPORTANTE: Te enviaré las fotos de los diseños a continuación* 📢\n\n";
+
+    cart.forEach((item, i) => {
+        message += `*${i+1}. ${item.name}*\n`;
+        message += `   └ Talla: ${item.size} | Color: ${item.color}\n`;
+        message += `   └ Lado: ${item.side} | Logo: ${item.logoName}\n`;
+        if(item.notes) message += `   └ Notas: ${item.notes}\n`;
+        message += `   └ Precio: $${item.price}\n\n`;
+    });
+
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    message += `*TOTAL A PAGAR: $${total} MXN*`;
+
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
+}
+
+// Opcional: Cerrar cualquier modal al hacer clic fuera del contenido
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.style.display = 'none';
+    }
+}
+    // Inicializar UI si ya hay cosas
+    window.onload = updateCartUI;
+
+// --- NUEVA LÓGICA MULTI-CAPA ---
+let activeLayer = null;
+let isDragging = false;
+let isResizing = false;
+let isRotating = false;
+let startX, startY, startWidth, startAngle;
+
+// Manejo de archivos (Subir imagen)
+document.getElementById('logo-file').addEventListener('change', function(e) {
+    const files = e.target.files;
+    if (files.length === 0) return;
+
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            createImageLayer(event.target.result, file.name);
+        };
+        reader.readAsDataURL(file);
+    });
+
+    document.getElementById('edit-controls').style.display = 'block';
+    this.value = ""; // Limpiar input
+});
+
+// 1. Crear capa con manejadores
+function createImageLayer(src, name) {
+    const container = document.getElementById('canvas-container');
+    const wrapper = document.createElement('div');
+    wrapper.className = 'logo-wrapper';
+    wrapper.dataset.name = name;
+    wrapper.style.left = '50%';
+    wrapper.style.top = '50%';
+    wrapper.style.width = '100px';
+    wrapper.dataset.angle = 0; // Guardamos el ángulo aquí
+
+    const newImg = document.createElement('img');
+    newImg.src = src;
+    newImg.className = 'logo-layer';
+
+    const delBtn = document.createElement('div');
+    delBtn.className = 'delete-btn';
+    delBtn.innerHTML = '✕';
+    delBtn.onclick = (e) => { e.stopPropagation(); wrapper.remove(); };
+
+    // Agregamos los manejadores visuales
+    const resizer = document.createElement('div');
+    resizer.className = 'resizer';
+
+    const rotator = document.createElement('div');
+    rotator.className = 'rotator';
+
+    wrapper.appendChild(newImg);
+    wrapper.appendChild(delBtn);
+    wrapper.appendChild(resizer);
+    wrapper.appendChild(rotator);
+    container.appendChild(wrapper);
+
+    setActiveLayer(wrapper);
+}
+
+function setActiveLayer(el) {
+    if (activeLayer) activeLayer.classList.remove('active');
+    activeLayer = el;
+    if (activeLayer) {
+        activeLayer.classList.add('active');
+        document.getElementById('edit-controls').style.display = 'block';
+    }
+}
+
+// 2. Lógica Maestra de Interacción
+document.addEventListener('mousedown', initAction);
+document.addEventListener('touchstart', initAction, { passive: false });
+
+function initAction(e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    if (e.target.classList.contains('resizer')) {
+        isResizing = true;
+        startX = clientX;
+        startWidth = activeLayer.offsetWidth;
+        e.preventDefault();
+    }
+    else if (e.target.classList.contains('rotator')) {
+        isRotating = true;
+        const rect = activeLayer.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        startAngle = Math.atan2(clientY - centerY, clientX - centerX);
+        e.preventDefault();
+    }
+    else if (e.target.closest('.logo-wrapper')) {
+        isDragging = true;
+        const target = e.target.closest('.logo-wrapper');
+        setActiveLayer(target);
+        startX = clientX - target.offsetLeft;
+        startY = clientY - target.offsetTop;
+    } else {
+        if (activeLayer && !e.target.closest('#edit-controls')) {
+            activeLayer.classList.remove('active');
+            activeLayer = null;
+        }
+    }
+}
+
+document.addEventListener('mousemove', doAction);
+document.addEventListener('touchmove', doAction, { passive: false });
+
+function doAction(e) {
+    if (!activeLayer) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    if (isResizing) {
+        const newWidth = startWidth + (clientX - startX);
+        if (newWidth > 30) activeLayer.style.width = newWidth + 'px';
+        e.preventDefault();
+    }
+   else if (isRotating) {
+        const rect = activeLayer.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const currentAngle = Math.atan2(clientY - centerY, clientX - centerX);
+
+        // Convertir a grados y ajustar
+        let rotation = (currentAngle - startAngle) * (180 / Math.PI);
+
+        // Usar un dataset para mantener la rotación acumulada si prefieres,
+        // o simplemente aplicar el cálculo:
+        activeLayer.style.transform = `rotate(${rotation}deg)`;
+        e.preventDefault();
+    }
+    else if (isDragging) {
+        activeLayer.style.left = (clientX - startX) + 'px';
+        activeLayer.style.top = (clientY - startY) + 'px';
+        e.preventDefault();
+    }
+}
+
+document.addEventListener('mouseup', () => { isDragging = isResizing = isRotating = false; });
+document.addEventListener('touchend', () => { isDragging = isResizing = isRotating = false; });
+
+function resetLogo() {
+    if (activeLayer) {
+        activeLayer.remove();
+        activeLayer = null;
+    }
+}
+// Definición de colores extendida (Basada en tu imagen)
+const dtfColors = [
+    "Negro", "Blanco", "Marino", "Rojo", "Jaspe",
+    "Rosa", "Rosa Pastel", "Palo Rosa", "Morado", "Lila",
+    "Oxford", "Vino", "Rey", "Militar", "Beige",
+    "Café", "Verde", "Naranja", "Acua", "Amarillo",
+    "Shedron", "Amarillo Mango", "Moztaza", "Verde Manzana", "Azul Cielo"
+];
+
+// Colores básicos para Láser
+const laserColors = ["Acero", "Negro Mate", "Madera", "Piel"];
+
+// ... (Aquí mantén tu constante inventory)
+
+if(product) {
+    document.getElementById('product-name').innerText = product.name;
+    document.getElementById('product-img').src = product.img;
+    document.getElementById('product-price').innerText = `$${product.price} MXN`;
+
+    const colorSelect = document.getElementById('color');
+    colorSelect.innerHTML = ''; // Limpiamos opciones actuales
+
+    if(product.category === 'dtf') {
+        // Mostrar selector de lado
+        document.getElementById('view-side-group').style.display = 'block';
+
+        // Cargar paleta completa de colores DTF
+        dtfColors.forEach(color => {
+            let opt = document.createElement('option');
+            opt.value = color;
+            opt.innerText = color;
+            colorSelect.appendChild(opt);
+        });
+    } else {
+        // Ocultar selector de lado
+        document.getElementById('view-side-group').style.display = 'none';
+
+        // Cargar colores de Láser
+        laserColors.forEach(color => {
+            let opt = document.createElement('option');
+            opt.value = color;
+            opt.innerText = color;
+            colorSelect.appendChild(opt);
+        });
+    }
+}
