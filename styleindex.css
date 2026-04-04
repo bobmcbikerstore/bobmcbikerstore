@@ -25,7 +25,7 @@ header {
     /* Cambios aquí: */
     top: 0;
     left: 0;
-    right: 0; 
+    right: 0;
     width: auto; /* Evita que el padding sume al ancho total */
     box-sizing: border-box; /* Asegura que padding y border no "estiren" el header */
     z-index: 1000;
@@ -175,7 +175,7 @@ nav ul li a:hover { color: var(--primary); }
         flex-direction: column; /* Apila logo y menú */
         gap: 10px;
     }
-    
+
     nav ul {
         justify-content: center;
         width: 100%;
@@ -189,4 +189,163 @@ nav ul li a:hover { color: var(--primary); }
     .logo {
         font-size: 1.2rem; /* Reduce un poco el logo para que quepa */
     }
+}
+
+/* --- ESTRUCTURA BASE --- */
+.custom-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos bajen si no caben */
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.preview-box {
+    flex: 1;
+    min-width: 300px; /* Ancho mínimo para que no se vea minúsculo */
+    max-width: 500px;
+    background: var(--gray);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    position: sticky; /* En compu se queda fijo al bajar */
+    top: 90px;
+    height: fit-content;
+}
+
+.form-box {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    background: var(--gray);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* --- CONTENEDOR DE IMAGEN (CANVAS) --- */
+.image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Mantiene un cuadrado perfecto */
+    background: #fff; /* Opcional: fondo blanco para ver mejor la prenda */
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#product-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* --- MEDIA QUERIES (AJUSTES PARA MÓVIL) --- */
+@media (max-width: 768px) {
+    /* Evitamos que el cuerpo se desborde */
+    body {
+        padding-top: 60px;
+        overflow-x: hidden;
+    }
+
+    /* Contenedor principal: Ajuste de altura para que quepa todo */
+    .custom-container {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+        height: auto;
+    }
+
+    /* VISTA PREVIA: La hacemos más pequeña para que no robe toda la pantalla */
+    .preview-box {
+        position: relative; /* Cambia a sticky si quieres que te siga: sticky; top: 70px; */
+        width: 100%;
+        max-width: 100%;
+        padding: 10px;
+        z-index: 10;
+        background: var(--dark); /* Fondo oscuro para integrarse */
+    }
+
+    .preview-box h2 {
+        font-size: 1.2rem;
+        margin: 5px 0;
+    }
+
+    /* REDUCIMOS EL TAMAÑO DEL CANVAS EN MÓVIL */
+    .image-container {
+        width: 250px; /* Tamaño controlado */
+        height: 250px;
+        margin: 0 auto 10px auto;
+        border: 1px solid var(--primary);
+    }
+
+    /* FORMULARIO: Aseguramos que sea fácil de scrollear */
+    .form-box {
+        width: 100%;
+        max-width: 100%;
+        padding: 15px;
+        background: var(--gray);
+        border-radius: 15px 15px 0 0; /* Efecto de tarjeta moderna */
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+    }
+
+    /* Ajuste de controles de edición para que no se amontonen */
+    .control-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        align-items: end;
+    }
+
+    .control-group div {
+        margin-bottom: 0;
+    }
+
+    /* Botón más grande para pulgares */
+    .btn {
+        padding: 15px;
+        font-size: 1rem;
+    }
+}
+
+/* El contenedor permite scroll normal del dedo */
+.image-container {
+    touch-action: pan-y;
+}
+
+/* Solo el logo bloquea el scroll para permitir el arrastre */
+.logo-layer {
+    touch-action: none;
+    cursor: move;
+}
+
+/* --- ESTILOS EXTRA PARA COMPONENTES --- */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.input-group select, .input-group textarea {
+    width: 100%;
+    padding: 10px;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 5px;
+}
+
+.logo-layer {
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none; /* Bloquea el scroll del navegador solo sobre el logo */
 }
