@@ -66,23 +66,24 @@ header {
     box-shadow: 0 0 15px var(--primary);
 }
         .custom-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            padding: 120px 5% 50px;
-            max-width: 1200px;
-            margin: auto;
-        }
-        .preview-box {
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 15px;
-            border: 2px solid var(--primary);
-            text-align: center;
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 110px 5% 20px; /* Ajustado el padding superior */
+    max-width: 1200px;
+    margin: auto;
+    height: calc(100vh - 130px); /* Obliga al contenedor a medir solo el alto de la pantalla menos el header */
+    box-sizing: border-box;
+}
+       .preview-box {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid var(--primary);
+    text-align: center;
+    height: fit-content; /* La playera solo ocupa lo que necesita */
+    align-self: start;   /* Se queda arriba */
+}
         .preview-box img {
             width: 100%;
             max-height: 400px;
@@ -90,10 +91,27 @@ header {
             border-radius: 10px;
         }
         .form-box {
-            background: var(--gray);
-            padding: 30px;
-            border-radius: 15px;
-        }
+    background: var(--gray);
+    padding: 30px;
+    border-radius: 15px;
+    height: 100%;          /* Ocupa el alto disponible del contenedor */
+    overflow-y: auto;      /* Activa el scroll interno */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; /* Organiza los inputs hacia abajo */
+}
+
+/* Opcional: Estilo de scroll para que no se vea la barra fea del navegador */
+.form-box::-webkit-scrollbar {
+    width: 8px;
+}
+.form-box::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+.form-box::-webkit-scrollbar-track {
+    background: #111;
+}
         .input-group { margin-bottom: 20px; }
         .input-group label {
             display: block;
@@ -119,15 +137,23 @@ header {
             margin: 20px 0;
             font-family: 'Metal Mania';
         }
-        @media (max-width: 768px) {
+   @media (max-width: 768px) {
     .custom-container {
-        grid-template-columns: 1fr;
-        padding: 100px 20px 20px; /* Más espacio arriba y menos a los lados */
+        display: block;    /* Quitamos el grid en móvil */
+        height: auto;      /* Que la página crezca normal */
+        padding: 90px 15px 20px;
     }
+
     .preview-box {
-        position: relative; /* En móvil es mejor que no sea sticky */
+        position: relative;
         top: 0;
         margin-bottom: 20px;
+    }
+
+    .form-box {
+        max-height: none;   /* Quitamos el límite de altura */
+        overflow-y: visible; /* Quitamos el scroll interno */
+        height: auto;
     }
 }
 
@@ -208,18 +234,6 @@ header {
     flex-direction: column;
 }
 
-/* Contenedor de capas para la previsualización */
-.preview-box {
-    position: sticky;
-    top: 100px;
-    background: #1a1a1a;
-    padding: 20px;
-    border-radius: 15px;
-    border: 2px solid var(--primary);
-    text-align: center;
-    height: fit-content;
-}
-
 .image-container {
     position: relative;
     width: 100%;
@@ -274,4 +288,94 @@ input[type="range"] {
 
 .logo-layer {
     z-index: 10; /* Asegura que los logos estén sobre la playera */
+}
+
+/* Contenedor de la capa del logo */
+.logo-wrapper {
+    position: absolute;
+    cursor: move;
+    display: inline-block;
+    line-height: 0;
+}
+
+/* El logo dentro del wrapper */
+.logo-layer {
+    width: 100%;
+    height: auto;
+    user-select: none;
+    pointer-events: none; /* Evita que la imagen interfiera con el arrastre del wrapper */
+}
+
+/* El botón de tache (X) */
+.delete-btn {
+    position: absolute;
+    top: -15px;    /* Un poco más afuera */
+    right: -15px;  /* Un poco más afuera */
+    background: #ff0000;
+    color: white;
+    border-radius: 50%;
+    width: 32px;   /* Aumentamos tamaño para facilitar el toque en móvil */
+    height: 32px;  /* Aumentamos tamaño */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px; /* X más grande */
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid white;
+    z-index: 100;  /* Aseguramos que esté por encima de todo */
+    touch-action: manipulation; /* Optimiza para toques */
+}
+
+/* Evitar que el navegador intente seleccionar la imagen al mantener presionado */
+.logo-wrapper {
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.logo-wrapper.active .delete-btn {
+    display: flex;
+}
+
+/* Cuadro de selección activo */
+.logo-wrapper.active {
+    outline: 2px dashed var(--primary);
+    outline-offset: 5px;
+}
+
+/* Manejador de Redimensión (Esquina inferior derecha) */
+.resizer {
+    width: 15px;
+    height: 15px;
+    background: white;
+    border: 2px solid var(--primary);
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    cursor: nwse-resize;
+    display: none;
+    z-index: 110;
+    border-radius: 50%;
+}
+
+/* Manejador de Rotación (Arriba en el centro) */
+.rotator {
+    width: 15px;
+    height: 15px;
+    background: #00ff00;
+    border: 2px solid white;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: alias;
+    display: none;
+    z-index: 110;
+    border-radius: 50%;
+}
+
+.logo-wrapper.active .resizer,
+.logo-wrapper.active .rotator {
+    display: block;
 }
