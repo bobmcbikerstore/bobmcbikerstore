@@ -155,15 +155,37 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 
+// Abre el modal de checkout en lugar de ir directo a WhatsApp
 function checkoutWhatsApp() {
     if(cart.length === 0) {
         showGenericAlert("ARSENAL VACÍO", "Selecciona tu equipo antes de ir a la batalla.");
         return;
     }
+    document.getElementById('checkout-modal').style.display = 'flex';
+}
+
+function closeCheckoutModal() {
+    document.getElementById('checkout-modal').style.display = 'none';
+}
+
+// Procesa los datos del modal y envía a WhatsApp
+function confirmOrder() {
+    const name = document.getElementById('client-name').value;
+    const delivery = document.getElementById('delivery-point').value;
+    const payment = document.getElementById('payment-method').value;
+
+    if(!name) {
+        alert("Por favor, ingresa tu nombre.");
+        return;
+    }
 
     const phone = "525546628442";
-    let message = "🏴‍☠️ *ORDEN DE PERSONALIZACIÓN B.O.B* 🏴‍☠️\n\n";
-    message += "📢 *IMPORTANTE: Te enviaré las fotos de los diseños a continuación* 📢\n\n";
+    let message = `🏴‍☠️ *ORDEN DE PERSONALIZACIÓN B.O.B* 🏴‍☠️\n\n`;
+    message += `👤 *Cliente:* ${name}\n`;
+    message += `📍 *Entrega:* ${delivery}\n`;
+    message += `💳 *Pago:* ${payment}\n`;
+    message += `--------------------------\n`;
+    message += `📢 *IMPORTANTE: Te enviaré las fotos de los diseños a continuación* 📢\n\n`;
 
     cart.forEach((item, i) => {
         message += `*${i+1}. ${item.name}*\n`;
@@ -177,6 +199,12 @@ function checkoutWhatsApp() {
     message += `*TOTAL A PAGAR: $${total} MXN*`;
 
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
+
+    // Opcional: Limpiar carrito y cerrar modal tras enviar
+    // cart = [];
+    // localStorage.removeItem('bob_cart');
+    // updateCartUI();
+    closeCheckoutModal();
 }
 
 // Opcional: Cerrar cualquier modal al hacer clic fuera del contenido
