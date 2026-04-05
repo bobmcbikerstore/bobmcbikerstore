@@ -110,6 +110,38 @@
     </div>
 </div>
 
+<div id="checkout-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 450px; text-align: left;">
+        <h2 style="text-align: center;">🏁 FINALIZAR PEDIDO</h2>
+
+        <div style="margin-bottom: 15px;">
+            <label style="color: var(--primary); display: block; margin-bottom: 5px; font-weight: bold;">Nombre Completo:</label>
+            <input type="text" id="client-name" placeholder="Tu nombre" style="width: 100%; padding: 10px; background: #121212; border: 1px solid #444; color: white; border-radius: 5px;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="color: var(--primary); display: block; margin-bottom: 5px; font-weight: bold;">Punto de Entrega:</label>
+            <select id="delivery-point" style="width: 100%; padding: 10px; background: #121212; border: 1px solid #444; color: white; border-radius: 5px;">
+                <option value="Sur">📍 Zona Sur</option>
+                <option value="Norte">📍 Zona Norte</option>
+                <option value="Oriente">📍 Zona Oriente</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="color: var(--primary); display: block; margin-bottom: 5px; font-weight: bold;">Método de Pago:</label>
+            <select id="payment-method" style="width: 100%; padding: 10px; background: #121212; border: 1px solid #444; color: white; border-radius: 5px;">
+                <option value="Efectivo">💵 Efectivo (Contra entrega)</option>
+                <option value="Transferencia">📱 Transferencia Bancaria</option>
+                <option value="Tarjeta">💳 Tarjeta (Link de pago)</option>
+            </select>
+        </div>
+
+        <button class="btn" onclick="confirmOrder()" style="width: 100%; margin-bottom: 10px;">CONFIRMAR Y ENVIAR</button>
+        <button onclick="closeCheckoutModal()" style="background: none; border: none; color: #888; width: 100%; cursor: pointer; font-size: 0.8rem;">CANCELAR</button>
+    </div>
+</div>
+
 <script src="scriptp.js"></script>
 </body>
 </html>
