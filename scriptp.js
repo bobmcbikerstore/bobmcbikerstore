@@ -1,16 +1,23 @@
- const inventory = [
-    { id: 1, category: 'dtf', name: "Playera Algodón Hombre", price: 250, img: "img/ph.png", imgBack: "img/phr.png" },
-    { id: 2, category: 'dtf', name: "Playera Algodón Mujer", price: 250, img: "img/pm.png", imgBack: "img/pmr.png" },
-    { id: 3, category: 'dtf', name: "Sudadera Unisex Capucha", price: 550, img: "img/scf.png", imgBack: "img/sc.png" },
-    { id: 4, category: 'dtf', name: "Sudadera Cerrada", price: 480, img: "img/sc1.png", imgBack: "img/scr1.png" },
-    { id: 5, category: 'dtf', name: "Playera Dri-fit", price: 280, img: "img/pd.png", imgBack: "img/pdr.png" },
-    { id: 6, category: 'dtf', name: "Gorra de Malla", price: 180, img: "img/gm.png"},
-    { id: 7, category: 'laser', name: "Placas Militares", price: 150, img: "img/pm1.png" },
-    { id: 8, category: 'laser', name: "Licorera Metálica", price: 320, img: "img/lm.jpg" },
-    { id: 9, category: 'laser', name: "Navaja Táctica", price: 450, img: "img/nt.jpg" },
-    { id: 10, category: 'laser', name: "Porta Llaves", price: 200, img: "img/pll.png" },
-    { id: 11, category: 'laser', name: "Portacascos", price: 650, img: "img/pc.jpg" },
-    { id: 12, category: 'laser', name: "Libreta de Piel", price: 380, img: "img/l.png" }
+const inventory = [
+    // --- TEXTILES DTF ---
+    { id: 1, category: 'dtf', name: "Playera Manga Corta", price: 200, img: "img/ph.png" }, // Precio actualizado
+    { id: 2, category: 'dtf', name: "Playera Manga Larga", price: 220, img: "img/pm.png" }, // Nuevo precio
+    { id: 3, category: 'dtf', name: "Sudadera Capucha", price: 350, img: "img/sc.png" },     // Precio actualizado
+    { id: 4, category: 'dtf', name: "Sudadera Cerrada", price: 300, img: "img/sc1.png" },    // Precio actualizado
+    { id: 5, category: 'dtf', name: "Playera Dry Fit", price: 300, img: "img/pd.png" },      // Precio actualizado
+    { id: 6, category: 'dtf', name: "Gorras", price: 100, img: "img/gm.png" },               // Precio actualizado
+
+    // --- GRABADO LÁSER ---
+    { id: 7, category: 'laser', name: "Tarros 1L", price: 190, img: "img/t1l.png" },         // Nuevo producto
+    { id: 8, category: 'laser', name: "Tarros 600 ML", price: 150, img: "img/t600.png" },    // Nuevo producto
+    { id: 9, category: 'laser', name: "Tarros 355ML", price: 100, img: "img/t355.png" },     // Nuevo producto
+    { id: 10, category: 'laser', name: "Placas y Llaveros", price: 100, img: "img/pm1.png" },// Precio actualizado
+    { id: 11, category: 'laser', name: "Licoreras Estuche", price: 350, img: "img/lm.jpg" }, // Precio actualizado
+    { id: 12, category: 'laser', name: "Encendedor", price: 120, img: "img/enc.png" },       // Nuevo producto
+    { id: 13, category: 'laser', name: "Portallaves", price: 150, img: "img/pll.png" },      // Precio actualizado
+    { id: 14, category: 'laser', name: "Portacascos", price: 250, img: "img/pc.jpg" },       // Precio actualizado
+    { id: 15, category: 'laser', name: "Navajas", price: 200, img: "img/nt.jpg" },           // Precio actualizado
+    { id: 16, category: 'laser', name: "Cuadros", price: 150, img: "img/cuad.png" }          // Nuevo producto
 ];
 
     // Cargar carrito desde LocalStorage al iniciar
