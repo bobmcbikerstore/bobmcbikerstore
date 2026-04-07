@@ -15,31 +15,35 @@
 </header>
 
     <div class="custom-container">
-        <div class="preview-box">
+       <div class="preview-box">
     <h2 id="product-name">Cargando...</h2>
-    <div class="image-container" id="canvas-container">
-    <img id="product-img" src="" alt="Vista previa">
+    
+    <div class="view-label">VISTA FRONTAL</div>
+    <div class="image-container canvas-container" id="canvas-frente">
+        <img id="product-img-frente" src="" alt="Frente">
     </div>
+
+    <div id="back-view-wrapper" style="display: none; margin-top: 30px;">
+        <div class="view-label">VISTA TRASERA</div>
+        <div class="image-container canvas-container" id="canvas-espalda">
+            <img id="product-img-espalda" src="" alt="Espalda">
+        </div>
+    </div>
+
     <div class="price-tag" id="product-price">$0 MXN</div>
 </div>
 
-        <div class="form-box">
-            <div class="input-group">
-                <div class="input-group" id="view-side-group" style="display: none;">
-    <label>Lado de la prenda</label>
-    <select id="view-side" onchange="changeView()">
-        <option value="Frente">Frente</option>
-        <option value="Espalda">Espalda</option>
-    </select>
-</div>
-                <label>Talla / Medida</label>
-                <select id="size">
-                    <option value="S">Chica (S)</option>
-                    <option value="M">Mediana (M)</option>
-                    <option value="L">Grande (L)</option>
-                    <option value="XL">Extra Grande (XL)</option>
-                </select>
-            </div>
+<div class="form-box">
+    <div class="input-group">
+        <label>Talla / Medida</label>
+        <select id="size">
+            <option value="S">Chica (S)</option>
+            <option value="M">Mediana (M)</option>
+            <option value="L">Grande (L)</option>
+            <option value="XL">Extra Grande (XL)</option>
+        </select>
+    </div>
+    
 
             <div class="input-group">
     <label>Color de la prenda/artículo</label>
@@ -50,15 +54,24 @@
     </small>
 </div>
 
-            <div class="input-group">
+<div class="input-group">
+    <label>¿En qué lado colocar?</label>
+    <select id="view-selector">
+        <option value="canvas-frente">FRENTE</option>
+        <option value="canvas-espalda">ESPALDA</option>
+    </select>
+</div>
+
+<div class="input-group">
     <label>Sube tu imagen o logo</label>
-<input type="file" id="logo-file" accept="image/*" multiple>
+    <input type="file" id="logo-file" accept="image/*" multiple>
+    </div>
 
    <div id="edit-controls" style="display: none;" class="control-group">
     <small style="color: #888; display: block; margin-bottom: 10px;">
         Usa los bordes para estirar y la esquina superior para rotar.
     </small>
-    <button onclick="resetLogo()" style="background:none; border:none; color:var(--primary); font-size:0.7rem; cursor:pointer;">ELIMINAR CAPA SELECCIONADA</button>
+    <button onclick="resetLogo()" class="btn-link-delete">ELIMINAR CAPA SELECCIONADA</button>
 </div>
 
             <div class="input-group">
@@ -74,6 +87,7 @@
     <button class="btn" id="add-to-cart-btn" style="width: 100%;" onclick="addToCart()">
         🛒 AÑADIR AL CARRITO
     </button>
+            
 </div>
     </div>
 
