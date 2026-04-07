@@ -145,6 +145,9 @@ nav ul li a:hover { color: var(--primary); }
     align-items: center;
     justify-content: center;
 }
+#alert-modal {
+    z-index: 6000 !important; /* Un nivel más arriba que el checkout */
+}
 .modal-content {
     background: var(--gray);
     border: 2px solid var(--primary);
@@ -154,6 +157,8 @@ nav ul li a:hover { color: var(--primary); }
     max-width: 400px;
     width: 90%;
     box-shadow: 0 0 20px var(--primary);
+    position: relative;
+    z-index: 6001;
 }
 .modal-content h2 { font-family: 'Metal Mania'; color: var(--primary); margin-bottom: 15px; }
 .modal-content p { color: white; margin-bottom: 25px; font-weight: bold; }
@@ -348,4 +353,183 @@ nav ul li a:hover { color: var(--primary); }
     user-select: none;
     -webkit-user-drag: none;
     touch-action: none; /* Bloquea el scroll del navegador solo sobre el logo */
+}
+
+@keyframes fadeInCard {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    animation: fadeInCard 0.5s ease backwards;
+}
+
+/* --- DISEÑO DE TARJETAS DE ARMAMENTO --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 40px 5%;
+}
+
+.card {
+    background: #1a1a1a; /* Un gris más profundo */
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid transparent; /* Base para el hover */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Efecto de brillo y borde al pasar el mouse */
+.card:hover {
+    border-color: var(--primary);
+    transform: translateY(-10px);
+    box-shadow: 0 0 25px rgba(255, 69, 0, 0.3);
+}
+
+.card img {
+    width: 100%;
+    height: 220px;
+    object-fit: contain; /* Para que la ropa no se corte */
+    background: #ffffff10; /* Fondo sutil para las imágenes con transparencia */
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    transition: 0.3s;
+}
+
+.card:hover img {
+    background: #ffffff15;
+    transform: scale(1.05);
+}
+
+.card h3 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 10px 0 5px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card .price {
+    font-family: 'Metal Mania', cursive;
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+/* Etiqueta de Categoría (DTF / LÁSER) */
+.category-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+/* Botón de la tarjeta */
+.card .btn {
+    width: 100%;
+    font-size: 0.8rem;
+    padding: 10px;
+}
+/* --- ESTILO GENERAL DE BOTONES (Clase .btn) --- */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    font-family: 'Metal Mania', cursive;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Botón Principal (Naranja/Fuego) - Usado para Añadir al Carrito y Confirmar */
+#add-to-cart-btn, .btn-primary, #checkout-modal .btn {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    color: white;
+    box-shadow: 0 4px 0 #b33000; /* Efecto de profundidad */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+#add-to-cart-btn:hover, .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 69, 0, 0.4), 0 2px 0 #b33000;
+}
+
+#add-to-cart-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 #b33000;
+}
+
+/* Botón Secundario (Gris Metálico / Guardar Diseño) */
+.btn-dark {
+    background: linear-gradient(180deg, #444, #222);
+    color: #eee !important;
+    border: 1px solid #555;
+    box-shadow: 0 4px 0 #111;
+}
+
+.btn-dark:hover {
+    background: linear-gradient(180deg, #555, #333);
+    border-color: var(--primary);
+    color: white !important;
+}
+
+/* Botón Seguir Personalizando (Luz Blanca) */
+.btn-secondary {
+    background: #ffffff;
+    color: #000000 !important;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #cccccc;
+}
+
+.btn-secondary:hover {
+    background: #f0f0f0;
+    box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2), 0 2px 0 #cccccc;
+}
+
+/* --- BOTÓN FLOTANTE DEL CARRITO (Círculo) --- */
+.cart-trigger {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    background: var(--primary);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2000;
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);
+    font-size: 1.5rem;
+    transition: 0.3s;
+    border: 2px solid white;
+}
+
+.cart-trigger:hover {
+    transform: scale(1.1) rotate(-10deg);
+    background: #ff6a00;
 }
