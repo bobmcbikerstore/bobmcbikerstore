@@ -196,16 +196,35 @@ header {
 }
 
         /* Estilos para el Modal */
+/* Estilo base para todos los modales */
 .modal-overlay {
     display: none;
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
     background: rgba(0, 0, 0, 0.85);
-    z-index: 5000;
     align-items: center;
     justify-content: center;
+    z-index: 5000; /* Nivel base para modales */
 }
 
+/* MODAL DE FINALIZAR PEDIDO (El que está debajo) */
+#checkout-modal {
+    z-index: 5000;
+}
+
+/* MODAL DE ALERTA/ERROR (El que debe ir hasta arriba) */
+#generic-alert-modal {
+    z-index: 6000 !important; /* Un nivel mucho más alto */
+}
+
+/* Asegurar que el contenido del modal de alerta también suba */
+#generic-alert-modal .modal-content {
+    z-index: 6001;
+    position: relative;
+}
 .modal-content {
     background: var(--gray);
     border: 2px solid var(--primary);
@@ -215,6 +234,8 @@ header {
     max-width: 400px;
     width: 90%;
     box-shadow: 0 0 20px var(--primary);
+    position: relative;
+    z-index: 6001;
 }
 
 .modal-content h2 {
@@ -378,4 +399,158 @@ input[type="range"] {
 .logo-wrapper.active .resizer,
 .logo-wrapper.active .rotator {
     display: block;
+}
+
+.view-label {
+    font-family: 'Metal Mania';
+    color: var(--primary);
+    font-size: 1rem;
+    margin-bottom: 10px;
+    text-align: left;
+    border-left: 4px solid var(--primary);
+    padding-left: 10px;
+    background: rgba(255, 69, 0, 0.1);
+}
+
+/* Contenedor principal de la imagen del producto */
+.canvas-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px; /* Ajusta según el tamaño de tus mockups */
+    margin: 0 auto;
+    overflow: hidden; /* Evita que el logo se vea fuera de la caja */
+    background: #121212;
+    border-radius: 10px;
+    line-height: 0; /* Elimina espacios fantasma debajo de la imagen */
+}
+
+.canvas-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    user-select: none;
+    pointer-events: none; /* Para que no interfiera con el clic en el logo */
+}
+
+/* La capa que envuelve el logo subido */
+.logo-wrapper {
+    position: absolute;
+    z-index: 10;
+    cursor: move;
+    transform-origin: center center;
+    touch-action: none; /* Mejora el arrastre en móviles */
+}
+
+.logo-layer {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- ESTILO GENERAL DE BOTONES (Clase .btn) --- */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    font-family: 'Metal Mania', cursive;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Botón Principal (Naranja/Fuego) - Usado para Añadir al Carrito y Confirmar */
+#add-to-cart-btn, .btn-primary, #checkout-modal .btn {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    color: white;
+    box-shadow: 0 4px 0 #b33000; /* Efecto de profundidad */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+#add-to-cart-btn:hover, .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 69, 0, 0.4), 0 2px 0 #b33000;
+}
+
+#add-to-cart-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 #b33000;
+}
+
+/* Botón Secundario (Gris Metálico / Guardar Diseño) */
+.btn-dark {
+    background: linear-gradient(180deg, #444, #222);
+    color: #eee !important;
+    border: 1px solid #555;
+    box-shadow: 0 4px 0 #111;
+}
+
+.btn-dark:hover {
+    background: linear-gradient(180deg, #555, #333);
+    border-color: var(--primary);
+    color: white !important;
+}
+
+/* Botón Seguir Personalizando (Luz Blanca) */
+.btn-secondary {
+    background: #ffffff;
+    color: #000000 !important;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #cccccc;
+}
+
+.btn-secondary:hover {
+    background: #f0f0f0;
+    box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2), 0 2px 0 #cccccc;
+}
+
+/* --- BOTÓN FLOTANTE DEL CARRITO (Círculo) --- */
+.cart-trigger {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    background: var(--primary);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2000;
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);
+    font-size: 1.5rem;
+    transition: 0.3s;
+    border: 2px solid white;
+}
+
+.cart-trigger:hover {
+    transform: scale(1.1) rotate(-10deg);
+    background: #ff6a00;
+}
+
+/* --- BOTÓN ELIMINAR CAPA (Texto pequeño) --- */
+.btn-link-delete {
+    background: none;
+    border: 1px solid #444;
+    color: #888;
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.btn-link-delete:hover {
+    color: #ff0000;
+    border-color: #ff0000;
+    background: rgba(255, 0, 0, 0.05);
 }
