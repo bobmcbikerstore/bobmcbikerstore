@@ -2,22 +2,22 @@ const inventory = [
     // --- TEXTILES DTF ---
     { id: 1, category: 'dtf', name: "Playera Manga Corta", price: 200, img: "img/ph.png" }, // Precio actualizado
     { id: 2, category: 'dtf', name: "Playera Manga Larga", price: 220, img: "img/pm.png" }, // Nuevo precio
-    { id: 3, category: 'dtf', name: "Sudadera Capucha", price: 350, img: "img/sc.png" },     // Precio actualizado
+    { id: 3, category: 'dtf', name: "Sudadera Capucha", price: 350, img: "img/scf.png" },     // Precio actualizado
     { id: 4, category: 'dtf', name: "Sudadera Cerrada", price: 300, img: "img/sc1.png" },    // Precio actualizado
     { id: 5, category: 'dtf', name: "Playera Dry Fit", price: 300, img: "img/pd.png" },      // Precio actualizado
     { id: 6, category: 'dtf', name: "Gorras", price: 100, img: "img/gm.png" },               // Precio actualizado
 
     // --- GRABADO LÁSER ---
-    { id: 7, category: 'laser', name: "Tarros 1L", price: 190, img: "img/t1l.png" },         // Nuevo producto
+    { id: 7, category: 'laser', name: "Tarros 1L", price: 190, img: "img/t1.png" },         // Nuevo producto
     { id: 8, category: 'laser', name: "Tarros 600 ML", price: 150, img: "img/t600.png" },    // Nuevo producto
     { id: 9, category: 'laser', name: "Tarros 355ML", price: 100, img: "img/t355.png" },     // Nuevo producto
-    { id: 10, category: 'laser', name: "Placas y Llaveros", price: 100, img: "img/pm1.png" },// Precio actualizado
+    { id: 10, category: 'laser', name: "Placas y Llaveros", price: 100, img: "img/pmm.png" },// Precio actualizado
     { id: 11, category: 'laser', name: "Licoreras Estuche", price: 350, img: "img/lm.jpg" }, // Precio actualizado
-    { id: 12, category: 'laser', name: "Encendedor", price: 120, img: "img/enc.png" },       // Nuevo producto
+    { id: 12, category: 'laser', name: "Encendedor", price: 120, img: "img/e.png" },       // Nuevo producto
     { id: 13, category: 'laser', name: "Portallaves", price: 150, img: "img/pll.png" },      // Precio actualizado
-    { id: 14, category: 'laser', name: "Portacascos", price: 250, img: "img/pc.jpg" },       // Precio actualizado
-    { id: 15, category: 'laser', name: "Navajas", price: 200, img: "img/nt.jpg" },           // Precio actualizado
-    { id: 16, category: 'laser', name: "Cuadros", price: 150, img: "img/cuad.png" }          // Nuevo producto
+    { id: 14, category: 'laser', name: "Portacascos", price: 250, img: "img/pc.png" },       // Precio actualizado
+    { id: 15, category: 'laser', name: "Navajas", price: 200, img: "img/n.png" },           // Precio actualizado
+    { id: 16, category: 'laser', name: "Cuadros", price: 150, img: "img/c.png" }          // Nuevo producto
 ];
 
 function renderProducts(filter = 'all') {
@@ -116,37 +116,59 @@ function closeCheckoutModal() {
 
 // 3. Esta es la función final que envía TODO a WhatsApp
 function confirmOrder() {
+    // 1. Obtener los valores de los inputs del modal
     const name = document.getElementById('client-name').value;
     const delivery = document.getElementById('delivery-point').value;
     const payment = document.getElementById('payment-method').value;
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
 
-    if (!name) {
-        alert("Por favor, ingresa tu nombre para el pedido.");
-        return;
-    }
+    // Validación de seguridad
+    // Dentro de confirmOrder()
+if (name.trim() === "") {
+    showAlertModal("⚠️ ACCESO DENEGADO", "Debes ingresar tu nombre de piloto para registrar el pedido.");
+    return;
+}
 
-    const phone = "525546628442";
-    let message = "🏴‍☠️ *ORDEN DE PERSONALIZACIÓN B.O.B* 🏴‍☠️\n\n";
-
-    message += `👤 *CLIENTE:* ${name}\n`;
+    // 2. Construcción estética del mensaje
+    let message = `🏴‍☠️ *NUEVA ORDEN B.O.B CUSTOM* 🏴‍☠️\n\n`;
+    message += `👤 *CLIENTE:* ${name.toUpperCase()}\n`;
     message += `📍 *ENTREGA:* Zona ${delivery}\n`;
     message += `💳 *PAGO:* ${payment}\n`;
-    message += `----------------------------\n\n`;
+    message += `──────────────────\n\n`;
 
+    // 3. Listado detallado de productos
     cart.forEach((item, i) => {
-        message += `*${i+1}. ${item.name}*\n`;
-        if (item.size) message += `   └ Talla: ${item.size} | Color: ${item.color}\n`;
-        if (item.position) message += `   └ Ubicación: ${item.position}\n`;
-        if (item.logoName && item.logoName !== "Sin logo") message += `   └ Logo: ${item.logoName}\n`;
-        message += `   └ Precio: $${item.price}\n\n`;
+        message += `📦 *ARTÍCULO ${i + 1}:* ${item.name}\n`;
+        
+        // Detalles técnicos
+        if (item.size || item.color) {
+            message += `   • Detalle: ${item.size || 'N/A'} / ${item.color || 'N/A'}\n`;
+        }
+        
+        if (item.logoName && item.logoName !== "Sin logo") {
+            message += `   • Diseño: ${item.logoName}\n`;
+        }
+
+        if (item.position) {
+            message += `   • Ubicación: ${item.position}\n`;
+        }
+        
+        if (item.notes) {
+            message += `   • Notas: _${item.notes}_\n`;
+        }
+
+        message += `   • Subtotal: *$${item.price} MXN*\n\n`;
     });
 
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    message += `*TOTAL A PAGAR: $${total} MXN*`;
+    // 4. Cierre de la orden
+    message += `──────────────────\n`;
+    message += `💰 *TOTAL A PAGAR: $${total} MXN*\n\n`;
+    message += `_Por favor, adjunta tus capturas de diseño si personalizaste algún artículo._`;
 
-    // Cerrar modal y abrir WhatsApp
+    // 5. Ejecución
+    const phone = "525546628442";
     closeCheckoutModal();
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
 }
 
 // Inicializar al cargar la página
