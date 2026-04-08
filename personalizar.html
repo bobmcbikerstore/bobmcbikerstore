@@ -6,6 +6,7 @@
     <title>Personaliza tu Gear | B.O.B Store</title>
     <link rel="stylesheet" href="stylep.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Oswald&family=Orbitron&family=Permanent+Marker&family=Playfair+Display&family=Russo+One&family=Staatliches&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -34,7 +35,7 @@
 </div>
 
 <div class="form-box">
-    <div class="input-group">
+    <div class="input-group" id="size-container">
         <label>Talla / Medida</label>
         <select id="size">
             <option value="S">Chica (S)</option>
@@ -54,6 +55,16 @@
     </small>
 </div>
 
+<div id="edit-text-modal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:#1a1a1a; padding:20px; border-radius:10px; border:1px solid var(--primary); width:90%; max-width:400px;">
+        <h3 style="color:var(--primary); margin-top:0;">EDITAR TEXTO</h3>
+        <textarea id="edit-text-input" style="width:100%; background:#333; color:white; border:1px solid #444; padding:10px; border-radius:5px; height:100px; font-size:16px;"></textarea>
+        <div style="display:flex; gap:10px; margin-top:15px;">
+            <button onclick="saveTextEdit()" style="flex:1; background:var(--primary); color:black; border:none; padding:10px; font-weight:bold; cursor:pointer; border-radius:5px;">GUARDAR CAMBIOS</button>
+            <button onclick="closeModal('edit-text-modal')" style="flex:1; background:#444; color:white; border:none; padding:10px; cursor:pointer; border-radius:5px;">CANCELAR</button>
+        </div>
+    </div>
+</div>
 <div class="input-group">
     <label>¿En qué lado colocar?</label>
     <select id="view-selector">
@@ -71,7 +82,30 @@
     <small style="color: #888; display: block; margin-bottom: 10px;">
         Usa los bordes para estirar y la esquina superior para rotar.
     </small>
+    
     <button onclick="resetLogo()" class="btn-link-delete">ELIMINAR CAPA SELECCIONADA</button>
+</div>
+
+<div class="input-group">
+    <label>Añadir Texto al Diseño</label>
+    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+       
+        <input type="text" id="custom-text-input" placeholder="Escribe aquí..." style="flex: 2;">
+        <input type="color" id="text-color-picker" value="#ffffff" title="Color de texto" style="width: 40px; height: 40px; border: none; background: none; cursor: pointer;">
+        <select id="font-selector" style="flex: 1; font-size: 0.8rem;">
+            <option value="'Roboto', sans-serif">Estándar</option>
+            <option value="'Metal Mania', cursive">Metal Mania</option>
+            <option value="serif">Elegante</option>
+            <option value="monospace">Máquina</option>
+        </select>
+    </div>
+     <div style="margin-bottom: 15px;">
+        <label>Tamaño (px): <span id="px-display" style="color: white;">120</span></label>
+        <input type="range" id="size-slider" min="20" max="400" value="120" oninput="updateLayerSize(this.value)" style="width: 100%;">
+    </div>
+    <button class="btn btn-dark" style="width: 100%; background: #222;" onclick="addTextLayer()">
+        ➕ AÑADIR TEXTO
+    </button>
 </div>
 
             <div class="input-group">
@@ -155,6 +189,7 @@
         <button onclick="closeCheckoutModal()" style="background: none; border: none; color: #888; width: 100%; cursor: pointer; font-size: 0.8rem;">CANCELAR</button>
     </div>
 </div>
+
 
 <script src="scriptp.js"></script>
 </body>
