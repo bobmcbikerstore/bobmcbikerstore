@@ -13,11 +13,14 @@ const inventory = [
     { id: 9, category: 'laser', name: "Tarros 355ML", price: 100, img: "img/t355.png" },     // Nuevo producto
     { id: 10, category: 'laser', name: "Placas y Llaveros", price: 100, img: "img/pmm.png" },// Precio actualizado
     { id: 11, category: 'laser', name: "Licoreras Estuche", price: 350, img: "img/lm.jpg" }, // Precio actualizado
-    { id: 12, category: 'laser', name: "Encendedor", price: 120, img: "img/e.png" },       // Nuevo producto
-    { id: 13, category: 'laser', name: "Portallaves", price: 150, img: "img/pll.png" },      // Precio actualizado
-    { id: 14, category: 'laser', name: "Portacascos", price: 250, img: "img/pc.png" },       // Precio actualizado
-    { id: 15, category: 'laser', name: "Navajas", price: 200, img: "img/n.png" },           // Precio actualizado
-    { id: 16, category: 'laser', name: "Cuadros", price: 150, img: "img/c.png" }          // Nuevo producto
+    { id: 12, category: 'laser', name: "Licorera kit", price: 350, img: "img/lk.png" },
+    { id: 13, category: 'laser', name: "Encendedor", price: 120, img: "img/e.png" },       // Nuevo producto
+    { id: 14, category: 'laser', name: "Navajas", price: 200, img: "img/n.png" },
+    { id: 15, category: 'laser', name: "Portallaves", price: 150, img: "img/pll.png" },      // Precio actualizado
+    { id: 16, category: 'laser', name: "Portacascos", price: 250, img: "img/pc.png" },       // Precio actualizado
+    { id: 17, category: 'laser', name: "Cuadros", price: 150, img: "img/c.png" },          // Nuevo producto
+           // Nuevo producto
+
 ];
 
 function renderProducts(filter = 'all') {
