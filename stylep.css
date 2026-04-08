@@ -313,6 +313,7 @@ input[type="range"] {
 
 /* Contenedor de la capa del logo */
 .logo-wrapper {
+    user-select: none;
     position: absolute;
     cursor: move;
     display: inline-block;
@@ -324,6 +325,7 @@ input[type="range"] {
     width: 100%;
     height: auto;
     user-select: none;
+    z-index: 10;
     pointer-events: none; /* Evita que la imagen interfiera con el arrastre del wrapper */
 }
 
@@ -553,4 +555,124 @@ input[type="range"] {
     color: #ff0000;
     border-color: #ff0000;
     background: rgba(255, 0, 0, 0.05);
+}
+
+/* Esto hace que el texto se ajuste al ancho del contenedor .logo-wrapper */
+.text-layer {
+    display: inline-block;
+    white-space: pre-wrap; /* Mantiene espacios y saltos */
+    word-break: break-word;
+    font-size: calc(10px + 15 * (100% / 100)); /* Ajuste base */
+    font-size: 2rem; /* Tamaño inicial */
+}
+
+/* Magia: Cuando el usuario estira el wrapper, el texto se escala */
+.logo-wrapper:has(.text-layer) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Habilitar redimensión visual para texto */
+.logo-wrapper:has(.text-layer) .text-layer {
+    font-size: clamp(12px, 20cqw, 200px); /* Requiere soporte moderno */
+    /* Opción B: Si la de arriba no te convence, el usuario puede 
+       simplemente usar el resizer y el texto se mantendrá centrado */
+}
+
+/* Ajuste para que el texto se escale con el wrapper */
+.logo-wrapper:has(.text-layer) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+}
+
+.text-layer {
+    display: block;
+    line-height: 1.1;
+    text-align: center;
+    pointer-events: none; /* Evita que el cursor de texto interfiera con el arrastre */
+    white-space: nowrap; /* Evita saltos de línea inesperados al achicar */
+}
+
+/* Indicador visual de que una capa es editable */
+.logo-wrapper.active {
+    outline: 2px dashed var(--primary);
+    outline-offset: 5px;
+    background: rgba(255, 69, 0, 0.05); /* Sutil fondo naranja al seleccionar */
+}
+
+/* Manejadores más fáciles de usar en móvil */
+.resizer, .rotator {
+    width: 22px; 
+    height: 22px;
+    background: white;
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    z-index: 120;
+}
+
+.rotator {
+    background: #00ff00; /* Verde para identificar rotación */
+    top: -40px; /* Más alejado para no chocar con la X de borrar */
+}
+
+.delete-btn {
+    background: #ff0000;
+    width: 28px;
+    height: 28px;
+    top: -14px;
+    right: -14px;
+    font-size: 16px;
+    box-shadow: 0 0 10px rgba(255,0,0,0.4);
+}
+
+@keyframes pulse-border {
+    0% { outline-color: var(--primary); }
+    50% { outline-color: #ff8c00; }
+    100% { outline-color: var(--primary); }
+}
+
+.logo-wrapper.active {
+    animation: pulse-border 1.5s infinite;
+}
+
+/* Botón de Menú/Editar (Tres puntos) */
+.edit-btn {
+    position: absolute;
+    top: -15px;
+    left: -15px; /* Lado opuesto a la X de borrar */
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: none; /* Solo se ve cuando está activo */
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid white;
+    z-index: 100;
+}
+
+/* Mostrar el botón cuando la capa está seleccionada */
+.logo-wrapper.active .edit-btn {
+    display: flex;
+}
+
+/* Efecto hover para el botón */
+.edit-btn:hover {
+    background: #ff8c00;
+    transform: scale(1.1);
+}
+
+#edit-text-modal textarea {
+    pointer-events: auto !important;
+    z-index: 7000;
+}
+#edit-text-modal {
+    z-index: 7000 !important;
 }
