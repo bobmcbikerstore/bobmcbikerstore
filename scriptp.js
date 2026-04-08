@@ -10,12 +10,14 @@ const inventory = [
     { id: 8, category: 'laser', name: "Tarros 600 ML", price: 150, img: "img/t600.png" },
     { id: 9, category: 'laser', name: "Tarros 355ML", price: 100, img: "img/t355.png" },
     { id: 10, category: 'laser', name: "Placas y Llaveros", price: 100, img: "img/pm1.png" },
-    { id: 11, category: 'laser', name: "Licoreras Estuche", price: 350, img: "img/lm.jpg" },
-    { id: 12, category: 'laser', name: "Encendedor", price: 120, img: "img/e.png" },
-    { id: 13, category: 'laser', name: "Portallaves", price: 150, img: "img/pll.png" },
-    { id: 14, category: 'laser', name: "Portacascos", price: 250, img: "img/pc.png" },
-    { id: 15, category: 'laser', name: "Navajas", price: 200, img: "img/n.png" },
-    { id: 16, category: 'laser', name: "Cuadros", price: 150, img: "img/c.png" }
+    { id: 11, category: 'laser', name: "Licoreras Estuche", price: 250, img: "img/lm.jpg" },
+    { id: 12, category: 'laser', name: "Licorera kit", price: 350, img: "img/lk.png" },
+    { id: 13, category: 'laser', name: "Encendedor", price: 120, img: "img/e.png" },
+    { id: 14, category: 'laser', name: "Navajas", price: 200, img: "img/n.png" },
+    { id: 15, category: 'laser', name: "Portallaves", price: 150, img: "img/pll.png" },
+    { id: 16, category: 'laser', name: "Portacascos", price: 250, img: "img/pc.png" },
+    { id: 17, category: 'laser', name: "Cuadros", price: 150, img: "img/c.png" },
+    
 ];
 
 let cart = JSON.parse(localStorage.getItem('bob_cart')) || [];
@@ -43,7 +45,7 @@ if(product) {
     // --- LÓGICA DE COLOR FILTRADA ---
     const colorSelect = document.getElementById('color');
     const colorContainer = colorSelect.closest('.input-group'); // Selecciona el contenedor del campo
-
+    const sizeContainer = document.getElementById('size-container');
     if (product.category === 'dtf') {
         // Mostrar campo de color para DTF
         colorContainer.style.display = 'block';
@@ -56,6 +58,11 @@ if(product) {
             colorSelect.appendChild(opt);
         });
     } else {
+        sizeContainer.style.display = 'none';
+
+    // Ocultar color
+    colorContainer.style.display = 'none';
+    colorSelect.innerHTML = '<option value="N/A">N/A</option>'; 
         // Ocultar campo de color para Laser
         colorContainer.style.display = 'none';
         colorSelect.innerHTML = '<option value="N/A">N/A</option>'; 
@@ -95,13 +102,12 @@ function createImageLayer(src, name, containerId) {
     wrapper.dataset.name = name;
     wrapper.dataset.container = containerId;
     
-    // Posicionamiento inicial centrado
-    wrapper.style.left = '35%'; // Ajustado para que no empiece pegado
+    wrapper.style.left = '35%';
     wrapper.style.top = '30%';
-    wrapper.style.width = '120px'; // Tamaño inicial sugerido
+    wrapper.style.width = '120px'; // <-- Asegúrate que diga 'px'
 
     wrapper.innerHTML = `
-        <img src="${src}" class="logo-layer">
+        <img src="${src}" class="logo-layer" style="width: 100%;">
         <div class="delete-btn" onclick="this.parentElement.remove()">✕</div>
         <div class="resizer"></div>
         <div class="rotator"></div>
@@ -112,35 +118,85 @@ function createImageLayer(src, name, containerId) {
 }
 
 function setActiveLayer(el) {
+    // Quitar clase activa de la capa anterior
     if (activeLayer) activeLayer.classList.remove('active');
+    
     activeLayer = el;
-    if (activeLayer) activeLayer.classList.add('active');
+    
+    if (activeLayer) {
+        activeLayer.classList.add('active');
+        
+        const textElement = activeLayer.querySelector('.text-layer');
+        const slider = document.getElementById('size-slider');
+        const display = document.getElementById('px-display');
+        const sidebarInput = document.getElementById('custom-text-input');
+
+        if (textElement) {
+            // Si es texto, sincronizamos el input lateral y el tamaño de fuente
+            if (sidebarInput) sidebarInput.value = textElement.textContent.trim();
+            const fontSize = parseInt(window.getComputedStyle(textElement).fontSize);
+            if (slider) slider.value = fontSize;
+            if (display) display.innerText = fontSize;
+        } else {
+            // Si es imagen, el slider maneja el ancho (width)
+            const currentWidth = activeLayer.offsetWidth;
+            if (slider) slider.value = currentWidth;
+            if (display) display.innerText = currentWidth;
+        }
+    }
 }
+
+// Permite editar el texto de la capa activa mientras escribes en el input
+document.getElementById('custom-text-input').addEventListener('input', function(e) {
+    if (activeLayer) {
+        const textElement = activeLayer.querySelector('.text-layer');
+        if (textElement) {
+            textElement.innerText = e.target.value;
+            activeLayer.dataset.name = "Texto: " + e.target.value;
+            // Importante: Si el texto es muy largo, permite que la capa crezca
+            activeLayer.style.width = 'auto'; 
+        }
+    }
+});
 
 // --- 4. LÓGICA DE MOVIMIENTO (MOUSE & TOUCH) ---
 document.addEventListener('mousedown', initAction);
 document.addEventListener('touchstart', initAction, { passive: false });
 
 function initAction(e) {
+    // 🚨 NUEVO: ignorar clics dentro del modal
+    if (e.target.closest('#edit-text-modal')) return;
+
+    // 🚨 NUEVO: ignorar clics en botones
+    if (e.target.closest('button')) return;
+
+    // Si el clic es dentro del panel de edición, no hacer nada
+    if (e.target.closest('#edit-controls')) return;
+
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
     if (e.target.classList.contains('resizer')) {
-        isResizing = true; startX = clientX; startWidth = activeLayer.offsetWidth;
+        isResizing = true; 
+        startX = clientX; 
+        startWidth = activeLayer.offsetWidth;
         e.preventDefault();
-    } else if (e.target.classList.contains('rotator')) {
+    } 
+    else if (e.target.classList.contains('rotator')) {
         isRotating = true;
         const rect = activeLayer.getBoundingClientRect();
         startAngle = Math.atan2(clientY - (rect.top + rect.height/2), clientX - (rect.left + rect.width/2));
         e.preventDefault();
-    } else if (e.target.closest('.logo-wrapper')) {
+    } 
+    else if (e.target.closest('.logo-wrapper')) {
         isDragging = true;
         const target = e.target.closest('.logo-wrapper');
         setActiveLayer(target);
         startX = clientX - target.offsetLeft;
         startY = clientY - target.offsetTop;
-    } else {
-        if (activeLayer && !e.target.closest('#edit-controls')) {
+    } 
+    else {
+        if (activeLayer) {
             activeLayer.classList.remove('active');
             activeLayer = null;
         }
@@ -155,9 +211,27 @@ function doAction(e) {
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
+    // ... dentro de doAction, en el bloque if (isResizing) ...
     if (isResizing) {
         let newWidth = startWidth + (clientX - startX);
-        if (newWidth > 30) activeLayer.style.width = newWidth + 'px';
+        if (newWidth > 30) {
+            activeLayer.style.width = newWidth + 'px';
+            
+            const slider = document.getElementById('size-slider');
+            const display = document.getElementById('px-display');
+            
+            const textElement = activeLayer.querySelector('.text-layer');
+            if (textElement) {
+                // En el resizer manual, mantenemos una proporción estética
+                const fontSize = Math.round(newWidth * 0.3); 
+                textElement.style.fontSize = fontSize + 'px';
+                if (slider) slider.value = fontSize;
+                if (display) display.innerText = fontSize;
+            } else {
+                if (slider) slider.value = newWidth;
+                if (display) display.innerText = newWidth;
+            }
+        }
     } else if (isRotating) {
         const rect = activeLayer.getBoundingClientRect();
         const angle = Math.atan2(clientY - (rect.top + rect.height/2), clientX - (rect.left + rect.width/2));
@@ -198,7 +272,7 @@ function addToCart() {
     const item = {
         name: product.name,
         price: product.price,
-        size: document.getElementById('size').value,
+        size: product.category === 'dtf' ? document.getElementById('size').value : "N/A",
         color: colorValue, // Aquí usamos la variable validada
         notes: document.getElementById('notes').value,
         logoName: logosInfo || "Sin logo"
@@ -331,4 +405,121 @@ function resetLogo() { if(activeLayer) { activeLayer.remove(); activeLayer = nul
 // Función genérica para cerrar cualquier modal por su ID
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
+}
+
+function addTextLayer() {
+    const text = document.getElementById('custom-text-input').value;
+    const font = document.getElementById('font-selector').value;
+    const color = document.getElementById('text-color-picker').value;
+    const selectedView = document.getElementById('view-selector').value;
+
+    if (!text.trim()) {
+        showAlertModal("⚠️ CAMPO VACÍO", "Escribe algo antes de añadir el texto.");
+        return;
+    }
+
+    const container = document.getElementById(selectedView);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'logo-wrapper active'; 
+    wrapper.dataset.name = "Texto: " + text;
+    wrapper.style.left = '30%';
+    wrapper.style.top = '40%';
+    wrapper.style.position = 'absolute';
+
+    
+// Busca esta parte en tu función addTextLayer y asegúrate que esté así:
+wrapper.innerHTML = `
+    <div class="text-layer" style="font-family: ${font}; color: ${color}; white-space: nowrap; padding: 10px; font-size: 40px; min-width: 50px;">
+        ${text}
+    </div>
+    <div class="edit-btn" style="position:absolute; right:-10px; top:-10px; background:var(--primary); color:black; border-radius:50%; width:20px; height:20px; text-align:center; cursor:pointer; z-index:10;">⋮</div>
+    <div class="delete-btn" onclick="this.parentElement.remove()">✕</div>
+    <div class="resizer"></div>
+    <div class="rotator"></div>
+`;
+
+    // UN SOLO EVENTO PARA EL BOTÓN EDITAR
+    const eb = wrapper.querySelector('.edit-btn');
+    eb.onclick = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        setActiveLayer(wrapper); // Nos aseguramos que esta sea la capa activa
+        openEditTextModal();
+    };
+
+    container.appendChild(wrapper);
+    setActiveLayer(wrapper);
+    document.getElementById('edit-controls').style.display = 'block';
+}
+
+// Listener para cambiar color en tiempo real a la capa seleccionada
+document.getElementById('text-color-picker').addEventListener('input', function(e) {
+    if (activeLayer) {
+        const textElement = activeLayer.querySelector('.text-layer');
+        if (textElement) {
+            textElement.style.color = e.target.value;
+        }
+    }
+});
+
+// Función para cambiar el tamaño desde el control de PX
+function updateLayerSize(val) {
+    if (!activeLayer) return;
+    
+    const newValue = parseInt(val);
+    document.getElementById('px-display').innerText = newValue;
+
+    const textElement = activeLayer.querySelector('.text-layer');
+    
+    if (textElement) {
+        // Para TEXTO: El slider controla directamente el tamaño de la fuente
+        textElement.style.fontSize = newValue + 'px';
+        // Ajustamos el contenedor para que no corte el texto
+        activeLayer.style.width = 'auto'; 
+        activeLayer.style.minWidth = '50px';
+    } else {
+        // Para IMÁGENES: El slider controla el ancho del contenedor
+        activeLayer.style.width = newValue + 'px';
+    }
+}
+
+
+// Abre el modal y carga el texto actual de la capa activa
+function openEditTextModal() {
+    if (activeLayer) {
+        const textElement = activeLayer.querySelector('.text-layer');
+        if (textElement) {
+            const input = document.getElementById('edit-text-input');
+            input.value = textElement.innerText.trim();
+            
+            document.getElementById('edit-text-modal').style.display = 'flex';
+
+            setTimeout(() => input.focus(), 100);
+        }
+    }
+}
+
+function saveTextEdit() {
+    const newText = document.getElementById('edit-text-input').value.trim();
+    
+    if (!activeLayer) return;
+
+    const textElement = activeLayer.querySelector('.text-layer');
+
+    if (textElement && newText !== "") {
+        textElement.innerText = newText;
+
+        // Actualizar dataset correctamente
+        activeLayer.dataset.name = "Texto: " + newText;
+
+        // Forzar reflow (clave para que se vea el cambio)
+        textElement.style.display = 'none';
+        textElement.offsetHeight; // trigger reflow
+        textElement.style.display = 'block';
+
+        // Ajuste visual
+        activeLayer.style.width = 'auto';
+    }
+
+    closeModal('edit-text-modal');
 }
