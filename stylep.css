@@ -1,0 +1,927 @@
+/* =========================================
+   ESTILOS DE PERSONALIZACIÓN Y CHECKOUT
+   TEMA BIKER / MOTOCLUB
+   ========================================= */
+
+/* Variables y base general */
+:root {
+    --primary: #ff3300; /* Rojo/Naranja Fuego */
+    --primary-dark: #b32400;
+    --gray: #111111;    /* Asfalto oscuro */
+    --dark: #050505;
+    --metal: #222222;
+}
+
+body {
+    background: radial-gradient(circle at top, #1a1a1a 0%, #000000 100%);
+    color: white;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    overflow-x: hidden;
+}
+
+/* --- HEADER Y NAVEGACIÓN --- */
+header {
+    background: #000000;
+    padding: 15px 5%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-bottom: 3px solid var(--primary);
+    box-shadow: 0 4px 20px rgba(255, 51, 0, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.logo {
+    font-family: 'Metal Mania', cursive;
+    font-size: 2rem;
+    color: white;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(255, 51, 0, 0.8);
+}
+
+.logo span { color: var(--primary); }
+
+.back-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.back-link:hover {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+
+/* --- ESTRUCTURA PRINCIPAL (GRID) --- */
+.custom-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 110px 5% 20px;
+    max-width: 1200px;
+    margin: auto;
+    height: calc(100vh - 130px);
+    box-sizing: border-box;
+}
+
+.preview-box {
+    background: var(--gray);
+    padding: 25px;
+    border-radius: 4px;
+    border: 2px solid var(--metal);
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 10px 20px rgba(0,0,0,0.9);
+    text-align: center;
+    height: fit-content;
+    align-self: start;
+}
+
+.preview-box img, #product-img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 4px;
+    display: block;
+}
+
+/* Contenedor del Canvas / Prenda */
+.canvas-container, .image-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #0a0a0a;
+    border: 2px dashed #333;
+    border-radius: 4px;
+    line-height: 0;
+}
+
+.form-box {
+    background: var(--gray);
+    padding: 30px;
+    border-radius: 4px;
+    border: 2px solid var(--metal);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 10px 20px rgba(0,0,0,0.8);
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Scrollbar rudo para el formulario */
+.form-box::-webkit-scrollbar { width: 10px; }
+.form-box::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 0px;
+    border: 2px solid #000;
+}
+.form-box::-webkit-scrollbar-track {
+    background: #111;
+    border-left: 1px solid #333;
+}
+
+/* --- INPUTS Y FORMULARIOS --- */
+.input-group { margin-bottom: 25px; }
+
+.input-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+}
+
+.input-group select, .input-group input, .input-group textarea {
+    width: 100%;
+    padding: 14px;
+    background: #000000;
+    border: 2px solid #333;
+    color: white;
+    border-radius: 2px;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input-group select:focus, .input-group input:focus, .input-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(255, 51, 0, 0.2);
+}
+
+.price-tag {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin: 20px 0;
+    font-family: 'Metal Mania', cursive;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* --- CONTROLES DE EDICIÓN DEL LOGO/TEXTO --- */
+.control-group {
+    background: #0a0a0a;
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 10px;
+    border: 1px solid #333;
+    box-shadow: inset 0 0 10px #000;
+}
+
+.control-group label {
+    font-size: 0.85rem !important;
+    color: #999 !important;
+    margin-bottom: 8px;
+}
+
+input[type="range"] {
+    accent-color: var(--primary);
+    cursor: pointer;
+    width: 100%;
+}
+
+.view-label {
+    font-family: 'Metal Mania', cursive;
+    color: var(--primary);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    text-align: left;
+    border-left: 4px solid var(--primary);
+    padding-left: 10px;
+    background: rgba(255, 51, 0, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- LÓGICA DEL CANVAS Y CAPAS --- */
+.logo-layer, .canvas-container img {
+    user-select: none;
+    pointer-events: none;
+}
+
+.logo-wrapper {
+    position: absolute;
+    z-index: 10;
+    cursor: crosshair;
+    display: inline-block;
+    line-height: 0;
+    transform-origin: center center;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Capa Activa (Borde metálico parpadeante) */
+.logo-wrapper.active {
+    outline: 2px dashed var(--primary);
+    outline-offset: 5px;
+    background: rgba(255, 51, 0, 0.05);
+    animation: pulse-border 1.5s infinite;
+}
+
+@keyframes pulse-border {
+    0% { outline-color: var(--primary); }
+    50% { outline-color: #ff8c00; }
+    100% { outline-color: var(--primary); }
+}
+
+/* Elementos de control del Wrapper */
+.logo-wrapper.active .delete-btn,
+.logo-wrapper.active .resizer,
+.logo-wrapper.active .rotator,
+.logo-wrapper.active .edit-btn {
+    display: flex;
+}
+
+.resizer, .rotator {
+    width: 22px;
+    height: 22px;
+    background: #111;
+    border: 3px solid var(--primary);
+    position: absolute;
+    box-shadow: 0 0 8px rgba(0,0,0,0.8);
+    z-index: 120;
+    border-radius: 2px;
+}
+
+.resizer {
+    right: -14px;
+    bottom: -14px;
+    cursor: nwse-resize;
+    display: none;
+}
+
+.rotator {
+    background: #ffcc00;
+    border-color: #000;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: alias;
+    display: none;
+    border-radius: 50%; /* Mantener redondo para identificar rotación */
+}
+
+.delete-btn {
+    position: absolute;
+    top: -18px;
+    right: -18px;
+    background: #cc0000;
+    color: white;
+    border-radius: 2px; /* Bloque cuadrado */
+    width: 30px;
+    height: 30px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    border: 2px solid #000;
+    z-index: 100;
+    touch-action: manipulation;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+}
+
+.edit-btn {
+    position: absolute;
+    top: -18px;
+    left: -18px;
+    background: var(--primary);
+    color: #000;
+    border-radius: 2px; /* Bloque cuadrado */
+    width: 30px;
+    height: 30px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    border: 2px solid #000;
+    z-index: 100;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+}
+
+.edit-btn:hover { background: #ff471a; transform: translateY(-2px); }
+.delete-btn:hover { background: #ff0000; transform: translateY(-2px); }
+
+/* Lógica del Texto */
+.text-layer {
+    display: inline-block;
+    white-space: nowrap;
+    word-break: break-word;
+    font-size: 2rem;
+    line-height: 1.1;
+    text-align: center;
+    pointer-events: none;
+}
+
+.logo-wrapper:has(.text-layer) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+}
+
+/* --- MODALES --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+    backdrop-filter: blur(5px);
+}
+
+#checkout-modal { z-index: 5000; }
+#generic-alert-modal { z-index: 6000 !important; }
+#edit-text-modal { z-index: 7000 !important; }
+
+.modal-content, #generic-alert-modal .modal-content {
+    background: #111;
+    border: 3px solid var(--primary);
+    padding: 35px;
+    border-radius: 2px;
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 0 40px rgba(255, 51, 0, 0.4), inset 0 0 20px rgba(0,0,0,1);
+    position: relative;
+    z-index: 6001;
+}
+
+#edit-text-modal textarea {
+    pointer-events: auto !important;
+    z-index: 7000;
+}
+
+.modal-content h2 {
+    font-family: 'Metal Mania', cursive;
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-size: 2.2rem;
+    text-shadow: 2px 2px 0 black;
+}
+
+.modal-content p {
+    margin-bottom: 30px;
+    font-weight: normal;
+    color: #ccc;
+    font-size: 1.1rem;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+}
+
+/* --- BOTONES --- */
+.btn, .modal-buttons .btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 2px;
+    font-family: 'Metal Mania', cursive;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+#add-to-cart-btn, .btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 5px 0 var(--primary-dark), 0 10px 10px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.8);
+    border: 1px solid #ff6633;
+}
+
+#add-to-cart-btn:hover, .btn-primary:hover {
+    background: #ff471a;
+    transform: translateY(2px);
+    box-shadow: 0 3px 0 var(--primary-dark), 0 5px 5px rgba(0,0,0,0.5);
+}
+
+#add-to-cart-btn:active, .btn-primary:active {
+    transform: translateY(5px);
+    box-shadow: 0 0 0 var(--primary-dark);
+}
+
+.btn-dark {
+    background: #222;
+    color: #ccc !important;
+    border: 1px solid #555;
+    box-shadow: 0 4px 0 #000;
+}
+
+.btn-dark:hover {
+    background: #333;
+    border-color: var(--primary);
+    color: white !important;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #000;
+}
+
+.btn-secondary {
+    background: #e0e0e0;
+    color: #000 !important;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 0 #999;
+}
+
+.btn-secondary:hover {
+    background: #fff;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #999;
+}
+
+.btn-link-delete {
+    background: none;
+    border: 2px solid #444;
+    color: #888;
+    font-size: 0.8rem;
+    font-weight: 900;
+    padding: 8px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 15px;
+    text-transform: uppercase;
+    transition: 0.2s;
+}
+
+.btn-link-delete:hover {
+    color: #ff3300;
+    border-color: #ff3300;
+    background: rgba(255, 51, 0, 0.1);
+}
+
+.cart-trigger {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: var(--dark);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2000;
+    box-shadow: 0 0 25px rgba(255, 51, 0, 0.4);
+    font-size: 1.8rem;
+    transition: all 0.3s;
+    border: 3px solid var(--primary);
+    color: var(--primary);
+}
+
+.cart-trigger:hover {
+    transform: scale(1.1) rotate(-15deg);
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 0 35px var(--primary);
+}
+
+/* --- MEDIA QUERIES --- */
+@media (max-width: 768px) {
+    .custom-container {
+        display: block;
+        height: auto;
+        padding: 90px 15px 20px;
+    }
+
+    .preview-box {
+        position: relative;
+        top: 0;
+        margin-bottom: 25px;
+        padding: 15px;
+    }
+
+    .form-box {
+        max-height: none;
+        overflow-y: visible;
+        height: auto;
+        padding: 20px 15px;
+    }
+}
+
+/* =========================================
+   ESTILOS DEL CARRITO FLOTANTE (ARSENAL) - REDISEÑO BIKER CON IMÁGENES
+   ========================================= */
+
+/* --- PANEL DEL CARRITO (Contenedor Principal) --- */
+
+/* Insignia / Contador del carrito */
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--primary);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.8);
+    transition: all 0.3s;
+}
+
+/* Efecto cuando el carrito está vacío, ocultamos el contador */
+.cart-badge.hidden {
+    display: none;
+}
+
+.cart-floating-panel {
+    display: none; /* Se mantiene oculto por defecto */
+    position: fixed;
+    bottom: 110px;
+    right: 30px;
+    width: 380px;
+    max-width: 90vw;
+
+    /* CAMBIOS CLAVE: Altura automática y límite máximo */
+    height: auto;
+    max-height: 80vh;
+
+    /* Fondo oscuro con textura simulada */
+    background: repeating-linear-gradient(
+      45deg,
+      #0a0a0a,
+      #0a0a0a 10px,
+      #111111 10px,
+      #111111 20px
+    );
+    border: 2px solid var(--metal);
+    border-top: 6px solid var(--primary);
+    border-bottom: 2px solid var(--primary-dark);
+    border-radius: 4px;
+    padding: 20px;
+    z-index: 3000;
+    box-shadow: 10px 10px 0px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,1);
+    flex-direction: column;
+}
+
+.cart-floating-panel h3 {
+    font-family: 'Metal Mania', cursive;
+    color: var(--primary);
+    margin-top: 0;
+    font-size: 2rem;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 0 #000;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 2px;
+    flex-shrink: 0; /* No se encoge */
+}
+
+/* --- CONTENEDOR DE ITEMS (CON SCROLL) --- */
+.cart-items-container {
+    flex-grow: 1; /* Ocupa el espacio disponible */
+    overflow-y: auto; /* Scroll vertical */
+    padding-right: 8px; /* Espacio para la barra */
+    margin-bottom: 15px;
+}
+
+/* Scrollbar estilo metal rudo/oxidado */
+.cart-items-container::-webkit-scrollbar { width: 8px; }
+.cart-items-container::-webkit-scrollbar-thumb {
+    background: #444; /* Color base metal */
+    border: 1px solid #222;
+    border-radius: 2px;
+    box-shadow: inset 0 0 5px rgba(255, 51, 0, 0.2); /* Brillo naranja sutil */
+}
+.cart-items-container::-webkit-scrollbar-track {
+    background: #050505;
+    border-left: 1px solid #222;
+}
+
+/* --- TARJETA DE ÍTEM INDIVIDUAL (DISEÑO NUEVO) --- */
+.cart-item-card {
+    display: flex;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #222;
+    border-left: 3px solid var(--primary);
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 2px;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.7);
+    transition: all 0.2s;
+    align-items: flex-start;
+}
+
+.cart-item-card:hover {
+    border-color: var(--primary);
+    background: rgba(20, 20, 20, 0.8);
+    transform: translateX(-3px);
+}
+
+/* Contenedor imagen pequeña */
+.cart-item-img-container {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    margin-right: 12px;
+    border: 1px solid #333;
+    background: #000;
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-item-img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+/* Detalles del texto */
+.cart-item-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.cart-item-header strong {
+    font-size: 1rem;
+    color: white;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding-right: 10px;
+}
+
+/* Botón eliminar (✕) */
+.cart-item-remove {
+    color: #666;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    line-height: 1;
+    padding: 0 2px;
+}
+
+.cart-item-remove:hover {
+    color: var(--primary);
+    transform: scale(1.2) rotate(90deg);
+    text-shadow: 0 0 5px var(--primary);
+}
+
+/* Especificaciones (Talla, color, etc.) */
+.cart-item-specs {
+    font-size: 0.8rem;
+    color: #aaa;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 8px;
+    border-left: 1px solid #333;
+    padding-left: 8px;
+}
+
+.cart-item-specs span {
+    display: block;
+}
+
+.cart-notes {
+    font-style: italic;
+    color: #888;
+    margin-top: 3px;
+    word-break: break-word; /* Rompe textos largos */
+}
+
+/* Fila de precio */
+.cart-item-price-row {
+    text-align: right;
+    margin-top: auto;
+}
+
+.cart-item-price {
+    font-family: 'Metal Mania', cursive;
+    color: white;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 0 #000;
+}
+
+/* --- BLOQUE INFERIOR (Total y Botones) --- */
+.cart-total-box {
+    background: #050505;
+    border: 2px dashed #444;
+    padding: 12px;
+    font-weight: 900;
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: inset 0 0 10px #000;
+    margin-bottom: 12px;
+}
+
+.cart-total-box span {
+    color: var(--primary);
+    font-family: 'Metal Mania', cursive;
+    font-size: 2.2rem;
+    display: block;
+    margin-top: 5px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* Botón Confirmar Orden */
+.cart-floating-panel .btn {
+    margin: 0;
+    padding: 12px;
+    font-size: 1.2rem;
+    width: 100%;
+}
+
+/* Botón Cerrar Vista */
+.btn-close-cart {
+    background: #111;
+    border: 1px solid #444;
+    color: #888;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 900;
+    padding: 10px;
+    transition: all 0.2s;
+    letter-spacing: 2px;
+    border-radius: 2px;
+    box-shadow: 2px 2px 0px #000;
+}
+
+.btn-close-cart:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: #000;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px #000;
+}
+
+/* --- BOTÓN GATILLO DEL CARRITO (Flotante izquierdo cuadrado) --- */
+.cart-trigger-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: #000;
+    width: 70px;
+    height: 70px;
+    border-radius: 4px; /* Cuadrado rudo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2000;
+    border: 2px solid var(--metal);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.8), inset 0 0 15px rgba(255, 51, 0, 0.2);
+    font-size: 2rem;
+    transition: all 0.2s;
+    color: var(--primary);
+    transform: rotate(-5deg); /* Inclinación de actitud */
+}
+
+.cart-trigger-btn:hover {
+    transform: rotate(0deg) scale(1.05);
+    background: #111;
+    border-color: var(--primary);
+    box-shadow: 6px 6px 0px rgba(0,0,0,0.9), inset 0 0 20px rgba(255, 51, 0, 0.4);
+}
+
+/* --- AJUSTES MÓVIL --- */
+@media (max-width: 768px) {
+    .cart-floating-panel {
+        width: 90%;
+        bottom: 90px; /* Un poco más abajo para que no estorbe */
+        right: 5%;
+        left: 5%;
+
+        /* CAMBIOS CLAVE PARA CELULAR */
+        height: auto;
+        max-height: 75vh;
+
+        padding: 15px;
+    }
+
+    .cart-item-img-container {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+    }
+
+    .cart-item-header strong {
+        font-size: 0.9rem;
+    }
+
+    .cart-trigger-btn {
+        bottom: 20px;
+        left: 20px;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+}
+
+
+/* --- SEPARADORES POR PASOS --- */
+.step-header {
+    background: #1a1a1a;
+    color: white;
+    font-family: 'Metal Mania', cursive;
+    padding: 12px 15px;
+    margin: 25px 0 20px 0;
+    font-size: 1.3rem;
+    text-align: left;
+    border-left: 5px solid var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.step-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+}
+/* --- BOTÓN DE GUÍA / TUTORIAL --- */
+.btn-guide {
+    background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+    color: var(--primary);
+    border: 2px dashed var(--primary);
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 25px;
+    font-family: 'Metal Mania', cursive;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-guide:hover {
+    background: var(--primary);
+    color: white;
+    border-style: solid;
+    box-shadow: 0 0 20px rgba(255, 51, 0, 0.6);
+    transform: translateY(-3px);
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+}
+
+.btn-guide:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 5px rgba(255, 51, 0, 0.4);
+}

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personaliza tu Gear | B.O.B Store</title>
+    <link rel="stylesheet" href="stylep.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Oswald&family=Orbitron&family=Permanent+Marker&family=Playfair+Display&family=Russo+One&family=Staatliches&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+    <div class="logo">B.O.B<span> CUSTOM</span></div>
+    <a href="index.html" class="back-link">← VOLVER A TIENDA</a>
+</header>
+
+    <div class="custom-container">
+       <div class="preview-box">
+    <h2 id="product-name">Cargando...</h2>
+
+    <div class="view-label">VISTA FRONTAL</div>
+    <div class="image-container canvas-container" id="canvas-frente">
+        <img id="product-img-frente" src="" alt="Frente">
+    </div>
+
+    <div id="back-view-wrapper" style="display: none; margin-top: 30px;">
+        <div class="view-label">VISTA TRASERA</div>
+        <div class="image-container canvas-container" id="canvas-espalda">
+            <img id="product-img-espalda" src="" alt="Espalda">
+        </div>
+    </div>
+
+    <div class="price-tag" id="product-price">$0 MXN</div>
+</div>
+
+<div class="form-box">
+
+    <!-- SECCIÓN DE SELECCIÓN DE LLAVEROS (Aparece primero solo para la Promo Llaveros ID 25) -->
+    <div id="keychain-setup-section" style="display: none; background: #121212; padding: 20px; border-radius: 8px; border: 1px solid var(--primary); margin-bottom: 20px;">
+        <h2 style="text-align: center; color: var(--primary); margin-bottom: 10px;">⚙️ CONFIGURA TUS 3 LLAVEROS</h2>
+        <p style="text-align: center; color: #aaa; margin-bottom: 20px; font-size: 0.9rem;">Elige la forma de cada llavero antes de pasar al diseño:</p>
+
+        <div class="input-group" style="margin-bottom: 15px;">
+            <label style="color: white; font-weight: bold;">Llavero 1:</label>
+            <select id="kc-1" style="width: 100%; padding: 10px; background: #181818; border: 1px solid #444; color: white; border-radius: 5px;">
+                <option value="15">Rectangular</option>
+                <option value="16">Ovalado (Sin esquinas)</option>
+            </select>
+        </div>
+        <div class="input-group" style="margin-bottom: 15px;">
+            <label style="color: white; font-weight: bold;">Llavero 2:</label>
+            <select id="kc-2" style="width: 100%; padding: 10px; background: #181818; border: 1px solid #444; color: white; border-radius: 5px;">
+                <option value="15">Rectangular</option>
+                <option value="16">Ovalado (Sin esquinas)</option>
+            </select>
+        </div>
+        <div class="input-group" style="margin-bottom: 20px;">
+            <label style="color: white; font-weight: bold;">Llavero 3:</label>
+            <select id="kc-3" style="width: 100%; padding: 10px; background: #181818; border: 1px solid #444; color: white; border-radius: 5px;">
+                <option value="15">Rectangular</option>
+                <option value="16">Ovalado (Sin esquinas)</option>
+            </select>
+        </div>
+
+        <button class="btn" onclick="confirmKeychainSelection()" style="width: 100%;">CONTINUAR A DISEÑAR ➡️</button>
+    </div>
+
+    <!-- SECCIÓN DE PROMOCIÓN DE PLAYERAS (ID 26) -->
+    <div id="tshirt-promo-section" style="display: none; background: #121212; padding: 20px; border-radius: 8px; border: 1px solid var(--primary); margin-bottom: 20px;">
+        <h2 style="text-align: center; color: var(--primary); margin-bottom: 10px;">👕 ELIGE TUS 2 PLAYERAS</h2>
+        <p style="text-align: center; color: #aaa; margin-bottom: 20px; font-size: 0.9rem;">Selecciona 2 diseños de nuestro catálogo en stock. (No personalizables)</p>
+
+        <!-- Cuadrícula donde aparecerán las playeras -->
+        <div id="tshirt-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
+            <!-- JS inyectará las imágenes aquí -->
+        </div>
+
+        <button class="btn" onclick="addTshirtPromoToCart()" style="width: 100%;">AÑADIR PROMO AL CARRITO 🛒</button>
+    </div>
+
+    <!-- RESTO DE PASOS DE PERSONALIZACIÓN -->
+    <div id="customization-steps-container">
+        <!-- BOTÓN DE AYUDA -->
+        <button class="btn-guide" onclick="showTutorial()">
+            ❓ ¿CÓMO PERSONALIZAR? (VER GUÍA)
+        </button>
+        <!-- PASO 1 -->
+        <div class="step-header">PASO 1: TU ARMADURA (TALLA Y COLOR)</div>
+
+        <div class="input-group" id="size-container">
+            <label>Talla / Medida</label>
+            <select id="size">
+                <option value="S">Chica (S)</option>
+                <option value="M">Mediana (M)</option>
+                <option value="L">Grande (L)</option>
+                <option value="XL">Extra Grande (XL)</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Color de la prenda/artículo</label>
+            <select id="color"></select>
+            <small style="color: #888; font-size: 0.7rem; display: block; margin-top: 5px;">
+                * Stock según tienda, sujeto a existencias.
+            </small>
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="step-header">PASO 2: AÑADE TU INSIGNIA</div>
+
+        <div class="input-group">
+            <label>¿En qué lado colocar?</label>
+            <select id="view-selector">
+                <option value="canvas-frente">FRENTE</option>
+                <option value="canvas-espalda">ESPALDA</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Sube tu imagen o logo</label>
+            <input type="file" id="logo-file" accept="image/*" multiple>
+        </div>
+
+        <div id="edit-controls" style="display: none;" class="control-group">
+            <small style="color: #888; display: block; margin-bottom: 10px;">
+                Toca el diseño para seleccionarlo. Usa los bordes para estirar y la esquina superior para rotar.
+            </small>
+            <button onclick="resetLogo()" class="btn-link-delete" style="width: 100%;">ELIMINAR CAPA SELECCIONADA</button>
+        </div>
+        <div class="step-header">AÑADE TEXTO (OPCIONAL)</div>
+        <div class="input-group" style="margin-top: 15px;">
+            <label>Añadir Texto al Diseño</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="text" id="custom-text-input" placeholder="Escribe aquí..." style="flex: 2;">
+                <input type="color" id="text-color-picker" value="#ffffff" title="Color de texto" style="width: 40px; height: 40px; border: none; background: none; cursor: pointer;">
+                <select id="font-selector" style="flex: 1; font-size: 0.8rem;">
+                    <option value="'Roboto', sans-serif">Estándar</option>
+                    <option value="'Metal Mania', cursive">Metal Mania</option>
+                    <option value="serif">Elegante</option>
+                    <option value="monospace">Máquina</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label>Tamaño (px): <span id="px-display" style="color: white;">120</span></label>
+                <input type="range" id="size-slider" min="20" max="400" value="120" oninput="updateLayerSize(this.value)" style="width: 100%;">
+            </div>
+            <button class="btn btn-dark" style="width: 100%; background: #222;" onclick="addTextLayer()">
+                ➕ AÑADIR TEXTO
+            </button>
+            <div class="input-group">
+            <button class="btn btn-dark" style="width: 100%; margin-bottom: 10px; background: #444;" onclick="downloadDesign()">
+                PASO 3: 💾 GUARDA DISEÑO (IMAGEN)
+            </button>
+            </div>
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="step-header">PASO 4: REVISA Y PREPARA TU ORDEN</div>
+
+        <div class="input-group">
+            <label>Instrucciones adicionales para nosotros</label>
+            <textarea id="notes" rows="3" placeholder="Ej: Quiero que el logo quede centrado a la altura del pecho..."></textarea>
+        </div>
+
+        <div class="input-group">
+            <button class="btn" id="add-to-cart-btn" style="width: 100%;" onclick="addToCart()">
+                PASO 5: 🛒 AÑADIR AL CARRITO
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- BOTÓN GATILLO DEL CARRITO (Se queda flotando a la izquierda) -->
+<div class="cart-trigger-btn" onclick="toggleCart()">
+    🛒
+</div>
+
+<!-- PANEL DEL CARRITO FLOTANTE (Se abre a la derecha) -->
+<div id="cart-floating" class="cart-floating-panel">
+    <h3>🛒 TU ARSENAL</h3>
+    <div id="cart-items" class="cart-items-container">
+        <!-- Aquí se inyectan los productos con JS -->
+    </div>
+
+    <div class="cart-total-box">
+        TOTAL: $<span id="cart-total">0</span> MXN
+    </div>
+
+    <button class="btn" onclick="checkoutWhatsApp()" style="margin-top: 15px; padding: 12px; font-size: 1.1rem;">
+        Confirmar Orden
+    </button>
+    <button class="btn-close-cart" onclick="toggleCart()">Cerrar Vista</button>
+</div>
+
+<!-- MODAL DE ALERTA -->
+<div id="alert-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 id="modal-title">⚠️ AVISO</h2>
+        <p id="modal-message">No tienes armamento en tu inventario.</p>
+        <button class="btn" onclick="closeAlertModal()">ENTENDIDO</button>
+    </div>
+</div>
+
+<div id="generic-alert-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 id="alert-title">⚠️ AVISO</h2>
+        <p id="alert-message">Mensaje de alerta.</p>
+        <button class="btn" onclick="closeModal('generic-alert-modal')" style="width: 100%;">ENTENDIDO</button>
+    </div>
+</div>
+
+<!-- MODAL DE FINALIZAR PEDIDO -->
+<div id="checkout-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 450px; text-align: left;">
+        <h2 style="text-align: center;">🏁 FINALIZAR PEDIDO</h2>
+
+        <div style="margin-bottom: 15px;">
+            <label style="color: var(--primary); display: block; margin-bottom: 5px; font-weight: bold;">Nombre Completo:</label>
+            <input type="text" id="client-name" placeholder="Tu nombre" style="width: 100%; padding: 10px; background: #121212; border: 1px solid #444; color: white; border-radius: 5px;">
+        </div>
+
+        <!-- NUEVOS PUNTOS DE ENTREGA -->
+        <div style="margin-bottom: 10px;">
+            <label style="color: var(--primary); display: block; margin-bottom: 5px; font-weight: bold;">Punto de Entrega:</label>
+            <select id="delivery-point" onchange="toggleDeliveryDetails()" style="width: 100%; padding: 10px; background: #121212; border: 1px solid #444; color: white; border-radius: 5px;">
+                <option value="" selected disabled>Selecciona una opción...</option>
+                <option value="Domicilio">📍 Entrega a domicilio (Cotizacion)</option>
+                <option value="Narvarte / Santa Moto">📍 Pasar por pedido: Narvarte</option>
+                <option value="Narvarte / Santa Moto">📍 Pasar por pedido: Santa Moto (Solo domingos)</option>
+                <option value="Punto Medio: Tren Ligero Estadio Azteca">📍 Punto medio: Tren Ligero Estadio Azteca</option>
+                <option value="Punto Medio: Metro Iztacalco">📍 Punto medio: Metro Iztacalco</option>
+                <option value="Punto Medio: Metro Viaducto / Etiopia">📍 Punto medio: Metro Viaducto y Etiopía Narvarte P.</option>
+                <option value="Punto Medio: Metro Guelatao Iztapalapa">📍 Punto medio: Metro Guelatao Iztapalapa</option>
+                <option value="Punto Medio: Town Center Rosario">📍 Punto medio: Town Center Rosario</option>
+                <option value="Punto Medio: El Coyote Ciudad Neza">📍 Punto medio: El Coyote, Ciudad Neza</option>
+            </select>
+        </div>
+        <!-- INFO DINÁMICA DE ENTREGA -->
+        <div id="delivery-details-container" style="margin-bottom: 15px; padding: 10px; background: #1a1a1a; border-left: 3px solid var(--primary); border-radius: 4px; display: none;">
+            <p id="delivery-info-text" style="color: #ccc; font-size: 0.85rem; margin: 0;"></p>
+        </div>
+
+        <!-- MÉTODOS DE PAGO ACTUALIZADOS -->
+        <div style="margin-bottom: 10px;">
+            <label style="color: var(--primary); display: block; margin-bottom: 5px; font-weight: bold;">Método de Pago:</label>
+            <select id="payment-method" onchange="togglePaymentDetails()" style="width: 100%; padding: 10px; background: #121212; border: 1px solid #444; color: white; border-radius: 5px;">
+                <option value="" selected disabled>Selecciona cómo pagar...</option>
+                <option value="Efectivo">💵 Efectivo</option>
+                <option value="Transferencia">📱 Transferencia Bancaria</option>
+                <option value="Tarjeta">💳 Tarjeta de Crédito/Débito</option>
+            </select>
+        </div>
+
+        <!-- INFO DINÁMICA DE PAGO EN PANTALLA -->
+        <div id="payment-details-container" style="margin-bottom: 20px; padding: 10px; background: #1a1a1a; border-left: 3px solid var(--primary); border-radius: 4px; display: none;">
+
+            <div id="cash-details" style="display: none;">
+                <label style="color: white; display: block; margin-bottom: 5px; font-size: 0.9rem;">¿Con cuánto vas a pagar?</label>
+                <input type="number" id="cash-amount" placeholder="Ej. 500" style="width: 100%; padding: 8px; background: #000; border: 1px solid #444; color: white; border-radius: 4px;" oninput="calculateChange()">
+                <p id="change-display" style="color: var(--primary); font-size: 0.9rem; margin-top: 8px; font-weight: bold;">Cambio: $0 MXN</p>
+            </div>
+
+            <div id="transfer-details" style="display: none;">
+                <p style="color: #ccc; font-size: 0.9rem; margin: 0;"><strong>Cuenta CLABE:</strong> 012080015528219551<br><strong>A nombre de:</strong> Gabriela Gomez Robles</p>
+            </div>
+
+            <div id="card-details" style="display: none;">
+                <p style="color: #ccc; font-size: 0.9rem; margin: 0;">⚠️ Llevaremos terminal para tu pago al momento de la entrega.</p>
+            </div>
+        </div>
+
+        <button class="btn" onclick="confirmOrder()" style="width: 100%; margin-bottom: 10px;">CONFIRMAR Y ENVIAR</button>
+        <button onclick="closeCheckoutModal()" style="background: none; border: none; color: #888; width: 100%; cursor: pointer; font-size: 0.8rem;">CANCELAR</button>
+    </div>
+</div>
+
+<!-- BOTÓN GATILLO DEL CARRITO (Se queda flotando a la izquierda) -->
+    <div class="cart-trigger-btn" onclick="toggleCart()">
+        🛒
+        <!-- Este es el nuevo contador que añadimos -->
+        <span id="cart-counter" class="cart-badge">0</span>
+    </div>
+
+<script src="scriptp.js"></script>
+<script src="scriptp.js"></script>
+</body>
+</html>

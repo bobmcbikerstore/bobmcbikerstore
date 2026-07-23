@@ -1,0 +1,939 @@
+/* =========================================
+   DISEÑO BIKER / MOTOCLUB - ESTILO RUDO
+   ========================================= */
+
+:root {
+    /* Paleta más agresiva */
+    --primary: #ff3300; /* Naranja/Rojo fuego intenso */
+    --primary-dark: #b32400;
+    --dark: #050505; /* Negro profundo (asfalto) */
+    --gray: #181818; /* Gris oscuro para tarjetas */
+    --light: #e0e0e0;
+    --metal: #4a4a4a; /* Tono acero/metal */
+    --chrome-border: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    /* Fondo con un degradado sutil para simular textura rugosa/oscura */
+    background: radial-gradient(circle at center, #111111 0%, var(--dark) 100%);
+    color: var(--light);
+    padding-top: 80px;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, .logo {
+    font-family: 'Metal Mania', cursive;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* --- HEADER Y NAVEGACIÓN --- */
+header {
+    background: #000000;
+    padding: 1rem 5%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    box-sizing: border-box;
+    z-index: 1000;
+    /* Borde inferior estilo metal fundido */
+    border-bottom: 3px solid var(--primary);
+    box-shadow: 0 4px 20px rgba(255, 51, 0, 0.3);
+}
+
+.logo {
+    font-size: 2rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(255, 51, 0, 0.8);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul { display: flex; list-style: none; padding: 0; margin: 0; }
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Efecto de subrayado agresivo en nav */
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s;
+}
+
+nav ul li a:hover { color: var(--primary); }
+nav ul li a:hover::after { width: 100%; }
+
+/* --- HERO SECTION --- */
+.hero {
+    height: 65vh;
+    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.6)),
+                url('img/logo1.jpg'); /* Asegúrate de que esta imagen sea ruda */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Efecto parallax */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 2px solid #333;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    color: white;
+    text-shadow: 3px 3px 0 #000, 5px 5px 15px var(--primary);
+}
+
+/* --- BOTÓN DEL HERO (VER CATÁLOGO) --- */
+.hero .btn {
+    display: inline-block;
+    background: var(--primary, #ff3300); /* Rojo/Naranja Fuego */
+    color: white;
+    font-family: 'Metal Mania', cursive;
+    font-size: 1.8rem;
+    padding: 15px 50px;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 3px;
+    border: 2px solid #000; /* Borde negro sólido */
+    border-radius: 2px; /* Ligeramente cuadrado para mayor rudeza */
+
+    /* Magia 3D: Una sombra sólida negra y un brillo naranja */
+    box-shadow: 6px 6px 0 #000, 0 0 25px rgba(255, 51, 0, 0.4);
+    text-shadow: 2px 2px 0 #000; /* Hace que el texto resalte */
+
+    transition: all 0.2s ease-in-out;
+    margin-top: 30px;
+    width: auto; /* Para que no ocupe toda la pantalla en PC */
+}
+
+/* Efecto al pasar el mouse */
+.hero .btn:hover {
+    background: #ff471a; /* Un tono un poco más brillante */
+    transform: translate(2px, 2px); /* Se hunde ligeramente hacia la sombra */
+    box-shadow: 4px 4px 0 #000, 0 0 35px rgba(255, 51, 0, 0.8); /* El fuego brilla más */
+}
+
+/* Efecto al hacer clic */
+.hero .btn:active {
+    transform: translate(6px, 6px); /* Se hunde por completo */
+    box-shadow: 0 0 0 #000, 0 0 10px rgba(255, 51, 0, 0.5); /* Desaparece el bloque 3D */
+}
+
+/* Ajuste para móviles */
+@media (max-width: 768px) {
+    .hero .btn {
+        font-size: 1.5rem;
+        padding: 15px 30px;
+        width: 80%; /* Un poco más ancho en celular para facilitar el toque */
+    }
+}
+
+/* --- TÍTULOS DE SECCIÓN --- */
+.section-title {
+    text-align: center;
+    font-size: 3.5rem;
+    color: white;
+    margin-top: 80px;
+    text-shadow: 2px 2px 0 var(--primary-dark);
+}
+
+/* --- FILTROS --- */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: #111;
+    border: 2px solid var(--metal);
+    color: var(--light);
+    padding: 10px 30px;
+    cursor: pointer;
+    font-family: 'Metal Mania', cursive;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    box-shadow: 3px 3px 0 black;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 0 15px var(--primary), inset 0 0 10px rgba(0,0,0,0.5);
+    transform: translateY(-2px);
+}
+
+/* --- GRID Y TARJETAS (ESTILO ACERO PESADO) --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    padding: 40px 5%;
+}
+
+@keyframes fadeInCard {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card {
+    background: var(--gray);
+    padding: 20px;
+    border-radius: 4px; /* Bordes menos redondos para un look más duro */
+    text-align: center;
+    border: 2px solid #222;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--chrome-border), 0 10px 20px rgba(0,0,0,0.8);
+    animation: fadeInCard 0.6s ease backwards;
+}
+
+.card:hover {
+    border-color: var(--primary);
+    transform: translateY(-8px);
+    box-shadow: 0 0 20px rgba(255, 51, 0, 0.2), 0 15px 30px rgba(0,0,0,0.9);
+}
+
+.card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    background: #0a0a0a;
+    border-radius: 2px;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+    transition: transform 0.4s ease;
+}
+
+.card:hover img {
+    transform: scale(1.08);
+    border-color: var(--primary-dark);
+}
+
+.card h3 {
+    font-size: 1.4rem;
+    margin: 15px 0 10px;
+    color: white;
+}
+
+.card .price {
+    font-family: 'Metal Mania', cursive;
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 0 black;
+}
+
+.category-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #000;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    border-radius: 2px;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0 var(--primary-dark);
+}
+
+/* --- BOTONES GENERALES --- */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 2px;
+    font-family: 'Metal Mania', cursive;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+/* Botón Principal (Naranja/Rojo - Fuego) */
+#add-to-cart-btn, .btn-primary, #checkout-modal .btn, .card .btn {
+    background: var(--primary);
+    color: white;
+    /* Efecto de bloque pesado */
+    box-shadow: 0 5px 0 var(--primary-dark), 0 10px 10px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.8);
+    border: 1px solid #ff6633;
+}
+
+#add-to-cart-btn:hover, .btn-primary:hover, .card .btn:hover {
+    background: #ff471a;
+    transform: translateY(2px);
+    box-shadow: 0 3px 0 var(--primary-dark), 0 5px 5px rgba(0,0,0,0.5);
+}
+
+#add-to-cart-btn:active, .btn-primary:active, .card .btn:active {
+    transform: translateY(5px);
+    box-shadow: 0 0 0 var(--primary-dark);
+}
+
+/* Botón Secundario (Gris Metálico/Oscuro) */
+.btn-dark {
+    background: #222;
+    color: #ccc !important;
+    border: 1px solid #555;
+    box-shadow: 0 4px 0 #000;
+}
+
+.btn-dark:hover {
+    background: #333;
+    border-color: var(--light);
+    color: white !important;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #000;
+}
+
+.btn-secondary {
+    background: #e0e0e0;
+    color: #000 !important;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 0 #999;
+}
+.btn-secondary:hover {
+    background: #fff;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #999;
+}
+
+/* --- CUSTOMIZER / PERSONALIZADOR --- */
+.custom-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.preview-box, .form-box {
+    flex: 1;
+    min-width: 320px;
+    max-width: 550px;
+    background: #111;
+    padding: 25px;
+    border-radius: 4px;
+    border: 2px solid #222;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 10px 20px rgba(0,0,0,0.9);
+}
+
+.preview-box {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    border-color: var(--primary-dark);
+}
+
+.preview-box h2, .form-box h2 {
+    color: var(--primary);
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #1a1a1a;
+    border: 2px dashed #444;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: pan-y;
+}
+
+#product-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.logo-layer {
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
+    cursor: crosshair; /* Cursor más rudo para mover */
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.6));
+}
+
+/* --- FORMULARIOS / INPUTS --- */
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 900;
+    color: var(--light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-group select, .input-group textarea, .input-group input {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    border: 2px solid #333;
+    color: white;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 2px;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.input-group select:focus, .input-group textarea:focus, .input-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(255, 51, 0, 0.2);
+}
+
+/* --- MODALES --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95); /* Más oscuro */
+    z-index: 5000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+#alert-modal { z-index: 6000 !important; }
+
+.modal-content {
+    background: #111;
+    border: 3px solid var(--primary);
+    padding: 35px;
+    border-radius: 2px;
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 0 40px rgba(255, 51, 0, 0.4), inset 0 0 20px rgba(0,0,0,1);
+    position: relative;
+    z-index: 6001;
+}
+
+.modal-content h2 {
+    font-family: 'Metal Mania', cursive;
+    color: var(--primary);
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0 black;
+}
+
+.modal-content p {
+    color: #ccc;
+    margin-bottom: 30px;
+    font-weight: normal;
+    font-size: 1.1rem;
+}
+
+#checkout-modal .modal-content {
+    text-align: left;
+}
+
+#checkout-modal input, #checkout-modal select {
+    margin-top: 8px;
+}
+
+/* --- BOTÓN FLOTANTE DEL CARRITO --- */
+.cart-trigger {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: var(--dark);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2000;
+    box-shadow: 0 0 25px rgba(255, 51, 0, 0.4);
+    font-size: 1.8rem;
+    transition: all 0.3s;
+    border: 3px solid var(--primary);
+    color: var(--primary);
+}
+
+.cart-trigger:hover {
+    transform: scale(1.1) rotate(-15deg);
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 0 35px var(--primary);
+}
+
+/* --- MEDIA QUERIES (MÓVIL) --- */
+@media (max-width: 768px) {
+    body { padding-top: 75px; }
+
+    header {
+        padding: 0.8rem 5%;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav ul {
+        justify-content: center;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    nav ul li a {
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        margin-top: 50px;
+    }
+
+    .custom-container {
+        flex-direction: column;
+        padding: 15px 10px;
+        gap: 20px;
+    }
+
+    .preview-box {
+        position: relative;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        padding: 15px;
+        z-index: 10;
+        border-width: 1px;
+    }
+
+    .image-container {
+        width: 100%;
+        max-width: 300px; /* Evita que crezca sin control en móviles grandes */
+        height: auto;
+        aspect-ratio: 1 / 1;
+        margin: 0 auto 15px auto;
+        border-color: var(--primary-dark);
+    }
+
+    .form-box {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px;
+        border-radius: 4px;
+    }
+
+    .control-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        align-items: end;
+    }
+
+    .control-group div { margin-bottom: 0; }
+
+    .btn {
+        padding: 18px; /* Botones más altos para pulgares */
+        font-size: 1.1rem;
+    }
+}
+
+/* =========================================
+   ESTILOS DEL CARRITO FLOTANTE (ARSENAL) - REDISEÑO BIKER CON IMÁGENES
+   ========================================= */
+
+/* --- PANEL DEL CARRITO (Contenedor Principal) --- */
+.cart-floating-panel {
+    display: none; /* Se mantiene oculto por defecto */
+    position: fixed;
+    bottom: 110px;
+    right: 30px;
+    width: 380px;
+    max-width: 90vw;
+
+    /* CAMBIOS CLAVE: Altura automática y límite máximo */
+    height: auto;
+    max-height: 80vh;
+
+    /* Fondo oscuro con textura simulada */
+    background: repeating-linear-gradient(
+      45deg,
+      #0a0a0a,
+      #0a0a0a 10px,
+      #111111 10px,
+      #111111 20px
+    );
+    border: 2px solid var(--metal);
+    border-top: 6px solid var(--primary);
+    border-bottom: 2px solid var(--primary-dark);
+    border-radius: 4px;
+    padding: 20px;
+    z-index: 3000;
+    box-shadow: 10px 10px 0px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,1);
+    flex-direction: column;
+}
+
+.cart-floating-panel h3 {
+    font-family: 'Metal Mania', cursive;
+    color: var(--primary);
+    margin-top: 0;
+    font-size: 2rem;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 0 #000;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 2px;
+    flex-shrink: 0; /* No se encoge */
+}
+
+/* --- CONTENEDOR DE ITEMS (CON SCROLL) --- */
+.cart-items-container {
+    flex-grow: 1; /* Ocupa el espacio disponible */
+    overflow-y: auto; /* Scroll vertical */
+    padding-right: 8px; /* Espacio para la barra */
+    margin-bottom: 15px;
+}
+
+/* Scrollbar estilo metal rudo/oxidado */
+.cart-items-container::-webkit-scrollbar { width: 8px; }
+.cart-items-container::-webkit-scrollbar-thumb {
+    background: #444; /* Color base metal */
+    border: 1px solid #222;
+    border-radius: 2px;
+    box-shadow: inset 0 0 5px rgba(255, 51, 0, 0.2); /* Brillo naranja sutil */
+}
+.cart-items-container::-webkit-scrollbar-track {
+    background: #050505;
+    border-left: 1px solid #222;
+}
+
+/* --- TARJETA DE ÍTEM INDIVIDUAL (DISEÑO NUEVO) --- */
+.cart-item-card {
+    display: flex;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #222;
+    border-left: 3px solid var(--primary);
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 2px;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.7);
+    transition: all 0.2s;
+    align-items: flex-start;
+}
+
+.cart-item-card:hover {
+    border-color: var(--primary);
+    background: rgba(20, 20, 20, 0.8);
+    transform: translateX(-3px);
+}
+
+/* Contenedor imagen pequeña */
+.cart-item-img-container {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    margin-right: 12px;
+    border: 1px solid #333;
+    background: #000;
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-item-img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+/* Detalles del texto */
+.cart-item-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.cart-item-header strong {
+    font-size: 1rem;
+    color: white;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding-right: 10px;
+}
+
+/* Botón eliminar (✕) */
+.cart-item-remove {
+    color: #666;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    line-height: 1;
+    padding: 0 2px;
+}
+
+.cart-item-remove:hover {
+    color: var(--primary);
+    transform: scale(1.2) rotate(90deg);
+    text-shadow: 0 0 5px var(--primary);
+}
+
+/* Especificaciones (Talla, color, etc.) */
+.cart-item-specs {
+    font-size: 0.8rem;
+    color: #aaa;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 8px;
+    border-left: 1px solid #333;
+    padding-left: 8px;
+}
+
+.cart-item-specs span {
+    display: block;
+}
+
+.cart-notes {
+    font-style: italic;
+    color: #888;
+    margin-top: 3px;
+    word-break: break-word; /* Rompe textos largos */
+}
+
+/* Fila de precio */
+.cart-item-price-row {
+    text-align: right;
+    margin-top: auto;
+}
+
+.cart-item-price {
+    font-family: 'Metal Mania', cursive;
+    color: white;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 0 #000;
+}
+
+/* --- BLOQUE INFERIOR (Total y Botones) --- */
+.cart-footer {
+    flex-shrink: 0; /* No se encoge */
+    margin-top: auto;
+    background: rgba(0,0,0,0.8);
+    padding-top: 15px;
+    border-top: 2px solid #222;
+}
+
+.cart-total-box {
+    background: #050505;
+    border: 2px dashed #444;
+    padding: 12px;
+    font-weight: 900;
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: inset 0 0 10px #000;
+    margin-bottom: 12px;
+}
+
+.cart-total-box span {
+    color: var(--primary);
+    font-family: 'Metal Mania', cursive;
+    font-size: 2.2rem;
+    display: block;
+    margin-top: 5px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* Botón Confirmar Orden (Hereda de .btn pero ajustado) */
+.cart-floating-panel .btn-checkout {
+    margin: 0;
+    padding: 12px;
+    font-size: 1.2rem;
+    width: 100%;
+}
+
+/* Botón Cerrar Vista */
+.btn-close-cart {
+    background: #111;
+    border: 1px solid #444;
+    color: #888;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 900;
+    padding: 10px;
+    transition: all 0.2s;
+    letter-spacing: 2px;
+    border-radius: 2px;
+    box-shadow: 2px 2px 0px #000;
+}
+
+.btn-close-cart:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: #000;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px #000;
+}
+
+/* --- BOTÓN GATILLO DEL CARRITO (Flotante izquierdo cuadrado) --- */
+/* Insignia / Contador del carrito */
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--primary);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.8);
+    transition: all 0.3s;
+}
+
+/* Efecto cuando el carrito está vacío, ocultamos el contador */
+.cart-badge.hidden {
+    display: none;
+}
+
+.cart-trigger-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: #000;
+    width: 70px;
+    height: 70px;
+    border-radius: 4px; /* Cuadrado rudo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2000;
+    border: 2px solid var(--metal);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.8), inset 0 0 15px rgba(255, 51, 0, 0.2);
+    font-size: 2rem;
+    transition: all 0.2s;
+    color: var(--primary);
+    transform: rotate(-5deg); /* Inclinación de actitud */
+}
+
+.cart-trigger-btn:hover {
+    transform: rotate(0deg) scale(1.05);
+    background: #111;
+    border-color: var(--primary);
+    box-shadow: 6px 6px 0px rgba(0,0,0,0.9), inset 0 0 20px rgba(255, 51, 0, 0.4);
+}
+
+/* --- AJUSTES MÓVIL --- */
+@media (max-width: 768px) {
+    .cart-floating-panel {
+        width: 90%;
+        bottom: 90px; /* Un poco más abajo para que no estorbe */
+        right: 5%;
+        left: 5%;
+
+        /* CAMBIOS CLAVE PARA CELULAR */
+        height: auto;
+        max-height: 75vh;
+
+        padding: 15px;
+    }
+
+    .cart-item-img-container {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+    }
+
+    .cart-item-header strong {
+        font-size: 0.9rem;
+    }
+
+    .cart-trigger-btn {
+        bottom: 20px;
+        left: 20px;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+}

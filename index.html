@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B.O.B M.C Biker Store | Gear & Custom</title>
+    <link rel="stylesheet" href="styleindex.css">
+    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">B.O.B M.C<span> Biker STORE</span></div>
+            <ul>
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#shop">Tienda</a></li>
+                <li><a href="Contacto.html">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Ruta y Estilo</h1>
+            <p>Elige tu base y personalízala a tu manera.</p>
+            <a href="#shop" class="btn">Ver Catálogo</a>
+        </div>
+    </section>
+
+    <section id="shop" class="products">
+        <h2 class="section-title">Armamento Seleccionado</h2>
+
+       <div class="filters">
+            <button class="filter-btn active" onclick="filterProducts('all')">Todo</button>
+            <!-- Nuevo botón de Promociones añadido aquí -->
+            <button class="filter-btn" style="color: white; border-color: var(--primary);" onclick="filterProducts('promo')">🔥 Promos</button>
+            <button class="filter-btn" onclick="filterProducts('dtf')">Textiles DTF</button>
+            <button class="filter-btn" onclick="filterProducts('laser')">Grabado Láser</button>
+        </div>
+
+        <div class="product-grid" id="product-container">
+            </div>
+    </section>
+
+    <!-- BOTÓN GATILLO DEL CARRITO (Se queda flotando a la izquierda) -->
+<div class="cart-trigger-btn" onclick="toggleCart()">
+    🛒
+</div>
+
+<!-- PANEL DEL CARRITO FLOTANTE (Se abre a la derecha) -->
+<div id="cart-floating" class="cart-floating-panel">
+    <h3>🛒 TU ARSENAL</h3>
+    <div id="cart-items" class="cart-items-container">
+        <!-- Aquí se inyectan los productos con JS -->
+    </div>
+
+    <div class="cart-total-box">
+        TOTAL: $<span id="cart-total">0</span> MXN
+    </div>
+
+    <button class="btn" onclick="checkoutWhatsApp()" style="margin-top: 15px; padding: 12px; font-size: 1.1rem;">
+        Confirmar Orden
+    </button>
+    <button class="btn-close-cart" onclick="toggleCart()">Cerrar Vista</button>
+</div>
+
+<!-- MODAL DE ALERTA -->
+<div id="alert-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 id="modal-title">⚠️ AVISO</h2>
+        <p id="modal-message">No tienes armamento en tu inventario.</p>
+        <button class="btn" onclick="closeAlertModal()">ENTENDIDO</button>
+    </div>
+</div>
+
+<!-- MODAL DE FINALIZAR PEDIDO -->
+<div id="checkout-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 450px; text-align: left;">
+        <h2 style="text-align: center;">🏁 FINALIZAR PEDIDO</h2>
+
+        <div style="margin-bottom: 15px;">
+            <label style="color: var(--primary); display: block; margin-bottom: 5px; font-weight: bold;">Nombre Completo:</label>
+            <input type="text" id="client-name" placeholder="Tu nombre" style="width: 100%; padding: 10px; background: #121212; border: 1px solid #444; color: white; border-radius: 5px;">
+        </div>
+
+        <!-- NUEVOS PUNTOS DE ENTREGA -->
+        <div style="margin-bottom: 10px;">
+            <label style="color: var(--primary); display: block; margin-bottom: 5px; font-weight: bold;">Punto de Entrega:</label>
+            <select id="delivery-point" onchange="toggleDeliveryDetails()" style="width: 100%; padding: 10px; background: #121212; border: 1px solid #444; color: white; border-radius: 5px;">
+                <option value="" selected disabled>Selecciona una opción...</option>
+                <option value="Domicilio">📍 Entrega a domicilio (se cotiza por msj)</option>
+                <option value="Narvarte / Santa Moto">📍 Pasar por pedido: Narvarte</option>
+                <option value="Narvarte / Santa Moto">📍 Pasar por pedido: Santa Moto (Solo domingos)</option>
+                <option value="Punto Medio: Tren Ligero Estadio Azteca">📍 Punto medio: Tren Ligero Estadio Azteca</option>
+                <option value="Punto Medio: Metro Iztacalco">📍 Punto medio: Metro Iztacalco</option>
+                <option value="Punto Medio: Metro Viaducto / Etiopia">📍 Punto medio: Metro Viaducto y Etiopía Narvarte P.</option>
+                <option value="Punto Medio: Metro Guelatao Iztapalapa">📍 Punto medio: Metro Guelatao Iztapalapa</option>
+                <option value="Punto Medio: Town Center Rosario">📍 Punto medio: Town Center Rosario</option>
+                <option value="Punto Medio: El Coyote Ciudad Neza">📍 Punto medio: El Coyote, Ciudad Neza</option>
+            </select>
+        </div>
+        <!-- INFO DINÁMICA DE ENTREGA -->
+        <div id="delivery-details-container" style="margin-bottom: 15px; padding: 10px; background: #1a1a1a; border-left: 3px solid var(--primary); border-radius: 4px; display: none;">
+            <p id="delivery-info-text" style="color: #ccc; font-size: 0.85rem; margin: 0;"></p>
+        </div>
+
+        <!-- MÉTODOS DE PAGO ACTUALIZADOS -->
+        <div style="margin-bottom: 10px;">
+            <label style="color: var(--primary); display: block; margin-bottom: 5px; font-weight: bold;">Método de Pago:</label>
+            <select id="payment-method" onchange="togglePaymentDetails()" style="width: 100%; padding: 10px; background: #121212; border: 1px solid #444; color: white; border-radius: 5px;">
+                <option value="" selected disabled>Selecciona cómo pagar...</option>
+                <option value="Efectivo">💵 Efectivo</option>
+                <option value="Transferencia">📱 Transferencia Bancaria</option>
+                <option value="Tarjeta">💳 Tarjeta de Crédito/Débito</option>
+            </select>
+        </div>
+
+        <!-- INFO DINÁMICA DE PAGO EN PANTALLA -->
+        <div id="payment-details-container" style="margin-bottom: 20px; padding: 10px; background: #1a1a1a; border-left: 3px solid var(--primary); border-radius: 4px; display: none;">
+
+            <div id="cash-details" style="display: none;">
+                <label style="color: white; display: block; margin-bottom: 5px; font-size: 0.9rem;">¿Con cuánto vas a pagar?</label>
+                <input type="number" id="cash-amount" placeholder="Ej. 500" style="width: 100%; padding: 8px; background: #000; border: 1px solid #444; color: white; border-radius: 4px;" oninput="calculateChange()">
+                <p id="change-display" style="color: var(--primary); font-size: 0.9rem; margin-top: 8px; font-weight: bold;">Cambio: $0 MXN</p>
+            </div>
+
+            <div id="transfer-details" style="display: none;">
+                <p style="color: #ccc; font-size: 0.9rem; margin: 0;"><strong>Cuenta CLABE:</strong> 012080015528219551<br><strong>A nombre de:</strong> Gabriela Gomez Robles</p>
+            </div>
+
+            <div id="card-details" style="display: none;">
+                <p style="color: #ccc; font-size: 0.9rem; margin: 0;">⚠️ Llevaremos terminal para tu pago al momento de la entrega.</p>
+            </div>
+        </div>
+
+        <button class="btn" onclick="confirmOrder()" style="width: 100%; margin-bottom: 10px;">CONFIRMAR Y ENVIAR</button>
+        <button onclick="closeCheckoutModal()" style="background: none; border: none; color: #888; width: 100%; cursor: pointer; font-size: 0.8rem;">CANCELAR</button>
+    </div>
+</div>
+
+<!-- BOTÓN GATILLO DEL CARRITO (Se queda flotando a la izquierda) -->
+    <div class="cart-trigger-btn" onclick="toggleCart()">
+        🛒
+        <!-- Este es el nuevo contador que añadimos -->
+        <span id="cart-counter" class="cart-badge">0</span>
+    </div>
+    <script src="scriptindex.js"></script>
+</body>
+</html>
