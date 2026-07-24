@@ -997,24 +997,27 @@ function renderTshirtGrid() {
 
     // AQUÍ COLOCAS LOS NOMBRES E IMÁGENES DE TUS 10 PLAYERAS
     const promoShirts = [
-        { id: 'ts1', name: "Playera Biker Skull", img: "img/ph.png" },
-        { id: 'ts2', name: "Playera Ruta 66", img: "img/ph.png" },
-        { id: 'ts3', name: "Playera Custom", img: "img/ph.png" },
-        { id: 'ts4', name: "Playera Chopper", img: "img/ph.png" },
-        { id: 'ts5', name: "Playera Bobber", img: "img/ph.png" },
-        { id: 'ts6', name: "Playera Águila", img: "img/ph.png" },
-        { id: 'ts7', name: "Playera Motor V2", img: "img/ph.png" },
-        { id: 'ts8', name: "Playera MC Club", img: "img/ph.png" },
-        { id: 'ts9', name: "Playera Ride Hard", img: "img/ph.png" },
-        { id: 'ts10', name: "Playera Vintage Rider", img: "img/ph.png" }
+        { id: 'ts1', name: "Playera Beso Cereza", img: "img/1.jpg" },
+        { id: 'ts2', name: "Playera Guns n Roses", img: "img/2.jpg" },
+        { id: 'ts3', name: "Playera Chalino", img: "img/3.jpg" },
+        { id: 'ts4', name: "Playera Motorcycle Rebeld", img: "img/4.jpg" },
+        { id: 'ts5', name: "Playera Capibara", img: "img/5.jpg" },
+        { id: 'ts6', name: "Playera Born to Ride", img: "img/6.jpg" },
+        { id: 'ts7', name: "Playera Th Warriors ", img: "img/7.jpg" },
+        { id: 'ts8', name: "Playera Stich", img: "img/8.jpg" },
+        { id: 'ts9', name: "Playera AC/DC", img: "img/9.jpg" },
+        { id: 'ts10', name: "Playera Harley Davidson", img: "img/10.jpg" }
     ];
 
     promoShirts.forEach(shirt => {
         grid.innerHTML += `
-            <label class="tshirt-option" style="border: 1px solid #444; border-radius: 8px; padding: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; background: #181818; transition: 0.3s;">
-                <img src="${shirt.img}" alt="${shirt.name}" style="width: 100%; height: 120px; object-fit: contain; border-radius: 4px; margin-bottom: 10px; background: #222;">
-                <span style="color: white; font-size: 0.8rem; text-align: center; margin-bottom: 8px; font-weight: bold;">${shirt.name}</span>
-                <input type="checkbox" class="tshirt-cb" value="${shirt.name}" onchange="limitTshirtSelection(this)" style="transform: scale(1.5); cursor: pointer;">
+            <label class="tshirt-option" style="border: 2px solid #444; border-radius: 8px; padding: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; background: #181818; transition: 0.3s;">
+                <!-- IMAGEN A 240px DE ALTO -->
+                <img src="${shirt.img}" alt="${shirt.name}" style="width: 100%; height: 240px; object-fit: contain; border-radius: 4px; margin-bottom: 15px; background: #222;">
+                <!-- TEXTO A 1.1rem -->
+                <span style="color: white; font-size: 1.1rem; text-align: center; margin-bottom: 12px; font-weight: bold;">${shirt.name}</span>
+                <!-- CHECKBOX ESCALADO -->
+                <input type="checkbox" class="tshirt-cb" value="${shirt.name}" onchange="limitTshirtSelection(this)" style="transform: scale(1.8); cursor: pointer;">
             </label>
         `;
     });
